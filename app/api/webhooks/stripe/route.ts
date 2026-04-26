@@ -5,6 +5,7 @@ import { readJSON, writeJSON } from '@/lib/blob'
 import { Order, OrderIndex, OrderItem } from '@/lib/types'
 import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
+import { resend } from '@/lib/resend'
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -20,7 +21,11 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
-    const items: OrderItem[] = JSON.parse(session.metadata?.items ?? '[]')
+    const parsedItems: OrderItem[] = JSON.parse(session.metadata?.items ?? '[]').map((item: Omit<OrderItem, 'imageUrl'>) => ({
+      ...item,
+      imageUrl: '',
+    }))
+    const items = parsedItems
     const shipping = session.collected_information?.shipping_details?.address
 
     const order: Order = {
@@ -53,6 +58,24 @@ export async function POST(req: NextRequest) {
       createdAt: order.createdAt,
     })
     await writeJSON('orders/index.json', index)
+
+    try {
+      await resend.emails.send({
+        from: 'faavidel.art <noreply@faavidel.art>',
+        to: order.customerEmail,
+        subject: `Order confirmed — faavidel.art`,
+        html: `
+      <h2>Thank you for your order, ${order.customerName}!</h2>
+      <p>Your order <strong>#${order.id.slice(0, 8)}</strong> has been received and is being processed.</p>
+      <p>We'll be in touch with shipping details soon.</p>
+      <br>
+      <p>— Faavidel</p>
+    `,
+      })
+    } catch (emailErr) {
+      // Don't fail the webhook if email fails
+      console.error('Order confirmation email failed:', emailErr)
+    }
   }
 
   return NextResponse.json({ received: true })

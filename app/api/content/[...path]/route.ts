@@ -9,6 +9,12 @@ export async function GET(
 ) {
   const { path } = await params
   const filePath = path.join('/') + '.json'
+
+  if (filePath.startsWith('orders/')) {
+    const session = await auth()
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const data = await readJSON(filePath)
   if (data === null) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   return NextResponse.json(data)

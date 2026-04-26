@@ -34,12 +34,9 @@ export async function POST(req: NextRequest) {
     cancel_url: `${process.env.NEXTAUTH_URL}/shop`,
     metadata: {
       items: JSON.stringify(
-        items.map((i) => ({
-          productSlug: i.productSlug,
-          title: i.title,
-          price: i.price,
-          quantity: i.quantity,
-          imageUrl: i.imageUrl,
+        items.map(({ imageUrl: _, title, ...rest }) => ({
+          ...rest,
+          productTitle: title,
         }))
       ),
     },

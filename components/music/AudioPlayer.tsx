@@ -55,32 +55,72 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
 
   if (!current) return null
 
+  const isYoutube = !!current.youtubeUrl
+
+  // Convert YouTube watch URL to embed if needed
+  const youtubeEmbed = isYoutube ? (() => {
+    try {
+      const url = new URL(current.youtubeUrl!)
+      if (url.hostname.includes('youtube.com') && url.searchParams.get('v')) {
+        return `https://www.youtube.com/embed/${url.searchParams.get('v')}?autoplay=0`
+      }
+      if (url.hostname === 'youtu.be') {
+        return `https://www.youtube.com/embed${url.pathname}?autoplay=0`
+      }
+    } catch {}
+    return current.youtubeUrl!
+  })() : ''
+
   return (
     <div>
-      <div className="bg-ocean rounded-xl p-6 mb-8 flex gap-6 items-center">
-        <div className="w-16 h-16 rounded-lg overflow-hidden bg-charcoal shrink-0 relative">
-          {current.artworkUrl && (
-            <Image src={current.artworkUrl} alt={current.title} fill className="object-cover" />
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-white font-serif text-lg truncate">{current.title}</h3>
-          <div className="h-1 bg-white/20 rounded-full mt-3 cursor-pointer" onClick={seek}>
-            <motion.div className="h-full bg-burnt rounded-full" style={{ width: `${progress}%` }} />
+      {isYoutube ? (
+        <div className="bg-ocean rounded-xl p-6 mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 rounded-lg overflow-hidden bg-charcoal shrink-0 relative">
+              {current.artworkUrl && (
+                <Image src={current.artworkUrl} alt={current.title} fill className="object-cover" />
+              )}
+            </div>
+            <div>
+              <h3 className="text-white font-serif text-lg">{current.title}</h3>
+              {current.duration && <p className="text-white/40 font-sans text-xs mt-0.5">{current.duration}</p>}
+            </div>
+          </div>
+          <div className="rounded-lg overflow-hidden aspect-video">
+            <iframe
+              src={youtubeEmbed}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <button onClick={() => setCurrentIdx(i => Math.max(0, i - 1))} className="text-white/60 hover:text-white transition-colors">
-            <SkipBack size={20} />
-          </button>
-          <button onClick={toggle} className="w-10 h-10 bg-burnt rounded-full flex items-center justify-center text-white hover:bg-burnt/80 transition-colors">
-            {playing ? <Pause size={18} /> : <Play size={18} />}
-          </button>
-          <button onClick={() => setCurrentIdx(i => Math.min(tracks.length - 1, i + 1))} className="text-white/60 hover:text-white transition-colors">
-            <SkipForward size={20} />
-          </button>
+      ) : (
+        <div className="bg-ocean rounded-xl p-6 mb-8 flex gap-6 items-center">
+          <div className="w-16 h-16 rounded-lg overflow-hidden bg-charcoal shrink-0 relative">
+            {current.artworkUrl && (
+              <Image src={current.artworkUrl} alt={current.title} fill className="object-cover" />
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-white font-serif text-lg truncate">{current.title}</h3>
+            <div className="h-1 bg-white/20 rounded-full mt-3 cursor-pointer" onClick={seek}>
+              <motion.div className="h-full bg-burnt rounded-full" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <button onClick={() => setCurrentIdx(i => Math.max(0, i - 1))} className="text-white/60 hover:text-white transition-colors">
+              <SkipBack size={20} />
+            </button>
+            <button onClick={toggle} className="w-10 h-10 bg-burnt rounded-full flex items-center justify-center text-white hover:bg-burnt/80 transition-colors">
+              {playing ? <Pause size={18} /> : <Play size={18} />}
+            </button>
+            <button onClick={() => setCurrentIdx(i => Math.min(tracks.length - 1, i + 1))} className="text-white/60 hover:text-white transition-colors">
+              <SkipForward size={20} />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <audio ref={audioRef} />
 

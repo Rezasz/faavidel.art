@@ -72,11 +72,14 @@ export interface Track {
   id: string
   title: string
   fileUrl: string
+  youtubeUrl?: string
   artworkUrl: string
   duration: string
   order: number
   createdAt: string
 }
+
+export type TrackSourceType = 'file' | 'youtube'
 
 export interface MusicIndex {
   tracks: Track[]

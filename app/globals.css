@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    cursor: none;
+  }
+  body {
+    @apply font-serif text-charcoal bg-white antialiased;
+  }
+  ::selection {
+    background: theme('colors.seafoam');
+    color: white;
+  }
+}
+
+@layer utilities {
+  .section-label {
+    @apply font-sans text-xs tracking-[0.2em] uppercase text-seafoam;
+  }
+  .section-title {
+    @apply text-3xl text-ocean font-serif;
+  }
+  .section-rule {
+    @apply w-8 h-0.5 bg-burnt mt-1 mb-7;
+  }
+}

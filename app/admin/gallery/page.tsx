@@ -96,7 +96,7 @@ export default function AdminGalleryPage() {
                 className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
               <input placeholder="Year" type="number" value={form.year ?? ''} onChange={e => setForm(f => ({ ...f, year: Number(e.target.value) }))}
                 className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
-              <input placeholder="Tags (comma separated)" value={Array.isArray(form.tags) ? (form.tags as string[]).join(', ') : (form.tags as string ?? '')}
+              <input placeholder="Tags (comma separated)" value={Array.isArray(form.tags) ? (form.tags as string[]).join(', ') : ((form.tags as unknown as string) ?? '')}
                 onChange={e => setForm(f => ({ ...f, tags: e.target.value as unknown as string[] }))}
                 className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
               <textarea placeholder="Description" value={form.description ?? ''} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={4}

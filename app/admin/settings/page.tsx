@@ -35,7 +35,7 @@ export default function AdminSettingsPage() {
         ].map(({ key, label, type }) => (
           <div key={key}>
             <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">{label}</label>
-            <input value={(form as Record<string, string>)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+            <input value={(form as unknown as Record<string, string>)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
               type={type}
               className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
           </div>

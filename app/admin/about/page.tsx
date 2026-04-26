@@ -3,7 +3,14 @@ import { useEffect, useState } from 'react'
 import { AboutContent } from '@/lib/types'
 import FileUpload from '@/components/admin/FileUpload'
 
-const defaults: AboutContent = { fullBio: '', profilePhotoUrl: '', instagram: '', email: '' }
+const defaults: AboutContent = {
+  fullBio: '',
+  profilePhotoUrl: '',
+  instagram: '',
+  email: '',
+  whatsapp: '',
+  linktree: '',
+}
 
 export default function AdminAboutPage() {
   const [form, setForm] = useState<AboutContent>(defaults)
@@ -16,12 +23,17 @@ export default function AdminAboutPage() {
 
   const save = async () => {
     setSaving(true)
-    await fetch('/api/content/about', {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form),
-    })
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    try {
+      await fetch('/api/content/about', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form),
+      })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -38,8 +50,21 @@ export default function AdminAboutPage() {
             className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam resize-none" />
         </div>
         <div>
-          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">Instagram (handle)</label>
-          <input value={form.instagram} onChange={e => setForm(f => ({ ...f, instagram: e.target.value }))} placeholder="@yourhandle"
+          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">Instagram URL</label>
+          <input value={form.instagram} onChange={e => setForm(f => ({ ...f, instagram: e.target.value }))}
+            placeholder="https://www.instagram.com/yourhandle"
+            className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
+        </div>
+        <div>
+          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">WhatsApp Number</label>
+          <input value={form.whatsapp ?? ''} onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))}
+            placeholder="+971555895441"
+            className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
+        </div>
+        <div>
+          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">Linktree URL</label>
+          <input value={form.linktree ?? ''} onChange={e => setForm(f => ({ ...f, linktree: e.target.value }))}
+            placeholder="https://linktr.ee/yourhandle"
             className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
         </div>
         <div>

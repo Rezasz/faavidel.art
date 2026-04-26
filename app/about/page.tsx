@@ -9,8 +9,10 @@ export const revalidate = 60
 const defaultAbout: AboutContent = {
   fullBio: 'A multidisciplinary artist working across painting, photography, music, and writing.',
   profilePhotoUrl: '',
-  instagram: '',
-  email: 'hello@faavidel.art',
+  instagram: 'https://www.instagram.com/faa.videl',
+  email: 'info@faavidel.art',
+  whatsapp: '+971555895441',
+  linktree: 'https://linktr.ee/faavidel',
 }
 
 export default async function AboutPage() {
@@ -36,11 +38,23 @@ export default async function AboutPage() {
           <div className="font-serif text-charcoal/80 leading-relaxed whitespace-pre-line mb-8 text-lg">
             {about.fullBio}
           </div>
-          <div className="flex gap-5">
+          <div className="flex flex-wrap gap-4 mt-2">
             {about.instagram && (
-              <a href={`https://instagram.com/${about.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer"
+              <a href={about.instagram} target="_blank" rel="noopener noreferrer"
                 className="font-sans text-xs tracking-wider uppercase text-seafoam hover:text-ocean border-b border-seafoam/40 pb-0.5 transition-colors">
                 Instagram
+              </a>
+            )}
+            {about.whatsapp && (
+              <a href={`https://wa.me/${about.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer"
+                className="font-sans text-xs tracking-wider uppercase text-seafoam hover:text-ocean border-b border-seafoam/40 pb-0.5 transition-colors">
+                WhatsApp
+              </a>
+            )}
+            {about.linktree && (
+              <a href={about.linktree} target="_blank" rel="noopener noreferrer"
+                className="font-sans text-xs tracking-wider uppercase text-seafoam hover:text-ocean border-b border-seafoam/40 pb-0.5 transition-colors">
+                Linktree
               </a>
             )}
             {about.email && (

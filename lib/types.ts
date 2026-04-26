@@ -141,6 +141,8 @@ export interface AboutContent {
   profilePhotoUrl: string
   instagram: string
   email: string
+  whatsapp?: string
+  linktree?: string
   twitter?: string
 }
 

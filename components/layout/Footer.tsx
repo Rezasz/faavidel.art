@@ -11,6 +11,9 @@ export default function Footer() {
         <div className="flex gap-8">
           <Link href="/gallery" className="hover:text-white transition-colors uppercase">Gallery</Link>
           <Link href="/shop" className="hover:text-white transition-colors uppercase">Shop</Link>
+          <a href="https://www.instagram.com/faa.videl" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors uppercase">Instagram</a>
+          <a href="https://wa.me/971555895441" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors uppercase">WhatsApp</a>
+          <a href="https://linktr.ee/faavidel" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors uppercase">Linktree</a>
           <Link href="/about" className="hover:text-white transition-colors uppercase">Contact</Link>
         </div>
       </div>

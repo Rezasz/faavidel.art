@@ -25,48 +25,58 @@ export default function AdminWritingPage() {
 
   const save = async () => {
     setSaving(true)
-    const slug = (form.slug ?? form.title!.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')) || 'untitled'
-    const post: Post = {
-      slug,
-      title: form.title!,
-      excerpt: form.excerpt ?? '',
-      content: form.content ?? '',
-      date: form.date ?? new Date().toISOString().split('T')[0],
-      status: (form.status as 'published' | 'draft') ?? 'draft',
-      tags: form.tagsInput.split(',').map(t => t.trim()).filter(Boolean),
-      createdAt: form.createdAt ?? new Date().toISOString(),
+    try {
+      const slug = (form.slug ?? form.title!.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')) || 'untitled'
+      const post: Post = {
+        slug,
+        title: form.title!,
+        excerpt: form.excerpt ?? '',
+        content: form.content ?? '',
+        date: form.date ?? new Date().toISOString().split('T')[0],
+        status: (form.status as 'published' | 'draft') ?? 'draft',
+        tags: form.tagsInput.split(',').map(t => t.trim()).filter(Boolean),
+        createdAt: form.createdAt ?? new Date().toISOString(),
+      }
+      await fetch(`/api/content/writing/${slug}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(post),
+      })
+      const existing = posts.find(p => p.slug === slug)
+      const updated: PostIndex = {
+        posts: existing
+          ? posts.map(p => p.slug === slug ? { slug, title: post.title, excerpt: post.excerpt, date: post.date, status: post.status, tags: post.tags } : p)
+          : [...posts, { slug, title: post.title, excerpt: post.excerpt, date: post.date, status: post.status, tags: post.tags }]
+      }
+      updated.posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      await fetch('/api/content/writing/index', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(updated),
+      })
+      await load()
+      setForm(emptyPost())
+      setEditing(false)
+    } catch (err) {
+      console.error('Save error:', err)
+    } finally {
+      setSaving(false)
     }
-    await fetch(`/api/content/writing/${slug}`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(post),
-    })
-    const existing = posts.find(p => p.slug === slug)
-    const updated: PostIndex = {
-      posts: existing
-        ? posts.map(p => p.slug === slug ? { slug, title: post.title, excerpt: post.excerpt, date: post.date, status: post.status, tags: post.tags } : p)
-        : [...posts, { slug, title: post.title, excerpt: post.excerpt, date: post.date, status: post.status, tags: post.tags }]
-    }
-    updated.posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    await fetch('/api/content/writing/index', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(updated),
-    })
-    await load()
-    setForm(emptyPost())
-    setEditing(false)
-    setSaving(false)
   }
 
   const remove = async (slug: string) => {
     if (!confirm('Delete this post?')) return
-    await fetch('/api/content/writing/index', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ posts: posts.filter(p => p.slug !== slug) }),
-    })
-    await load()
+    try {
+      await fetch(`/api/content/writing/${slug}`, { method: 'DELETE' })
+      await fetch('/api/content/writing/index', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ posts: posts.filter(p => p.slug !== slug) }),
+      })
+      await load()
+    } catch (err) {
+      console.error('Remove error:', err)
+    }
   }
 
   const edit = async (slug: string) => {

@@ -19,35 +19,44 @@ export default function AdminVideoPage() {
 
   const save = async () => {
     setSaving(true)
-    const video: VideoItem = {
-      id: form.id ?? Date.now().toString(),
-      title: form.title!,
-      description: form.description ?? '',
-      embedUrl: form.embedUrl!,
-      thumbnailUrl: form.thumbnailUrl ?? '',
-      order: videos.findIndex(v => v.id === form.id) >= 0 ? videos.find(v => v.id === form.id)!.order : videos.length,
-      createdAt: new Date().toISOString(),
+    try {
+      const video: VideoItem = {
+        id: form.id ?? Date.now().toString(),
+        title: form.title!,
+        description: form.description ?? '',
+        embedUrl: form.embedUrl!,
+        thumbnailUrl: form.thumbnailUrl ?? '',
+        order: videos.findIndex(v => v.id === form.id) >= 0 ? videos.find(v => v.id === form.id)!.order : videos.length,
+        createdAt: new Date().toISOString(),
+      }
+      const updated: VideoIndex = { videos: form.id && videos.find(v => v.id === form.id)
+        ? videos.map(v => v.id === form.id ? video : v)
+        : [...videos, video]
+      }
+      await fetch('/api/content/video/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated),
+      })
+      await load()
+      setForm(emptyVideo())
+      setAdding(false)
+    } catch (err) {
+      console.error('Save error:', err)
+    } finally {
+      setSaving(false)
     }
-    const updated: VideoIndex = { videos: form.id && videos.find(v => v.id === form.id)
-      ? videos.map(v => v.id === form.id ? video : v)
-      : [...videos, video]
-    }
-    await fetch('/api/content/video/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated),
-    })
-    await load()
-    setForm(emptyVideo())
-    setAdding(false)
-    setSaving(false)
   }
 
   const remove = async (id: string) => {
     if (!confirm('Delete this video?')) return
-    await fetch('/api/content/video/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ videos: videos.filter(v => v.id !== id) }),
-    })
-    await load()
+    try {
+      await fetch('/api/content/video/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ videos: videos.filter(v => v.id !== id) }),
+      })
+      await load()
+    } catch (err) {
+      console.error('Remove error:', err)
+    }
   }
 
   return (

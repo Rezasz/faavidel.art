@@ -9,12 +9,16 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null
-  const pathname = formData.get('pathname') as string | null
+  const rawPathname = formData.get('pathname') as string | null
 
-  if (!file || !pathname) {
+  if (!rawPathname || !/^[\w.\-]+$/.test(rawPathname)) {
+    return NextResponse.json({ error: 'Invalid pathname' }, { status: 400 })
+  }
+
+  if (!file) {
     return NextResponse.json({ error: 'Missing file or pathname' }, { status: 400 })
   }
 
-  const url = await uploadMedia(file, pathname, file.type)
+  const url = await uploadMedia(file, rawPathname, file.type)
   return NextResponse.json({ url })
 }

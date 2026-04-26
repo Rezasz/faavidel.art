@@ -15,16 +15,22 @@ export default function FileUpload({ accept = 'image/*', onUploaded, label = 'Up
 
   const upload = useCallback(async (file: File) => {
     setUploading(true)
-    const ext = file.name.split('.').pop()
-    const pathname = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-    const fd = new FormData()
-    fd.append('file', file)
-    fd.append('pathname', pathname)
-    const res = await fetch('/api/upload', { method: 'POST', body: fd })
-    const { url } = await res.json()
-    setPreview(url)
-    onUploaded(url)
-    setUploading(false)
+    try {
+      const ext = file.name.split('.').pop()
+      const pathname = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('pathname', pathname)
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) throw new Error(`Upload failed: ${res.status}`)
+      const { url } = await res.json()
+      setPreview(url)
+      onUploaded(url)
+    } catch (err) {
+      console.error('Upload error:', err)
+    } finally {
+      setUploading(false)
+    }
   }, [onUploaded])
 
   const onDrop = useCallback((e: React.DragEvent) => {

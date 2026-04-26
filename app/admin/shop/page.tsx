@@ -21,41 +21,50 @@ export default function AdminShopPage() {
 
   const save = async () => {
     setSaving(true)
-    const slug = (form.slug ?? form.title!.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')) || 'product'
-    const product: Product = {
-      slug,
-      title: form.title!,
-      description: form.description ?? '',
-      price: Number(form.price),
-      images: form.images ?? [],
-      stock: Number(form.stock),
-      status: (form.status as 'active' | 'archived') ?? 'active',
-      createdAt: form.createdAt ?? new Date().toISOString(),
+    try {
+      const slug = (form.slug ?? form.title!.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')) || 'product'
+      const product: Product = {
+        slug,
+        title: form.title!,
+        description: form.description ?? '',
+        price: Number(form.price),
+        images: form.images ?? [],
+        stock: Number(form.stock),
+        status: (form.status as 'active' | 'archived') ?? 'active',
+        createdAt: form.createdAt ?? new Date().toISOString(),
+      }
+      await fetch(`/api/content/shop/${slug}`, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(product),
+      })
+      const existing = products.find(p => p.slug === slug)
+      const summary = { slug, title: product.title, price: product.price, images: product.images, stock: product.stock, status: product.status }
+      const updated: ProductIndex = {
+        products: existing ? products.map(p => p.slug === slug ? summary : p) : [...products, summary]
+      }
+      await fetch('/api/content/shop/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated),
+      })
+      await load()
+      setForm(emptyProduct())
+      setEditing(false)
+    } catch (err) {
+      console.error('Save error:', err)
+    } finally {
+      setSaving(false)
     }
-    await fetch(`/api/content/shop/${slug}`, {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(product),
-    })
-    const existing = products.find(p => p.slug === slug)
-    const summary = { slug, title: product.title, price: product.price, images: product.images, stock: product.stock, status: product.status }
-    const updated: ProductIndex = {
-      products: existing ? products.map(p => p.slug === slug ? summary : p) : [...products, summary]
-    }
-    await fetch('/api/content/shop/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated),
-    })
-    await load()
-    setForm(emptyProduct())
-    setEditing(false)
-    setSaving(false)
   }
 
   const remove = async (slug: string) => {
     if (!confirm('Delete this product?')) return
-    await fetch('/api/content/shop/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ products: products.filter(p => p.slug !== slug) }),
-    })
-    await load()
+    try {
+      await fetch('/api/content/shop/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ products: products.filter(p => p.slug !== slug) }),
+      })
+      await load()
+    } catch (err) {
+      console.error('Remove error:', err)
+    }
   }
 
   const startEdit = async (slug: string) => {
@@ -97,7 +106,7 @@ export default function AdminShopPage() {
           <p className="font-sans text-xs text-charcoal/50 uppercase tracking-wider mb-2">Product Images</p>
           <div className="flex gap-3 flex-wrap mb-3">
             {(form.images ?? []).map((img, i) => (
-              <div key={i} className="relative">
+              <div key={img} className="relative">
                 <img src={img} alt="" className="w-20 h-20 object-cover rounded border border-gray-200" />
                 <button type="button" onClick={() => removeImage(i)}
                   className="absolute -top-1 -right-1 bg-burnt text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center">×</button>

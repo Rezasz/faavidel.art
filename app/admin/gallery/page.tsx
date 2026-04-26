@@ -21,56 +21,65 @@ export default function AdminGalleryPage() {
 
   const save = async () => {
     setSaving(true)
-    const slug = (form.slug ?? form.title!.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')) || 'untitled'
-    const tagsArray: string[] = typeof form.tags === 'string'
-      ? (form.tags as string).split(',').map(t => t.trim()).filter(Boolean)
-      : (form.tags as string[]) ?? []
+    try {
+      const slug = (form.slug ?? form.title!.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')) || 'untitled'
+      const tagsArray: string[] = typeof form.tags === 'string'
+        ? (form.tags as string).split(',').map(t => t.trim()).filter(Boolean)
+        : (form.tags as string[]) ?? []
 
-    const artwork: Artwork = {
-      slug,
-      title: form.title!,
-      description: form.description ?? '',
-      tags: tagsArray,
-      imageUrl: form.imageUrl!,
-      year: form.year ?? new Date().getFullYear(),
-      order: artworks.findIndex(a => a.slug === slug) >= 0
-        ? artworks.find(a => a.slug === slug)!.order
-        : artworks.length,
-      createdAt: new Date().toISOString(),
+      const artwork: Artwork = {
+        slug,
+        title: form.title!,
+        description: form.description ?? '',
+        tags: tagsArray,
+        imageUrl: form.imageUrl!,
+        year: form.year ?? new Date().getFullYear(),
+        order: artworks.findIndex(a => a.slug === slug) >= 0
+          ? artworks.find(a => a.slug === slug)!.order
+          : artworks.length,
+        createdAt: new Date().toISOString(),
+      }
+
+      await fetch(`/api/content/gallery/${slug}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(artwork),
+      })
+
+      const existing = artworks.find(a => a.slug === slug)
+      const updatedList = existing
+        ? artworks.map(a => a.slug === slug ? { slug, title: artwork.title, imageUrl: artwork.imageUrl, tags: artwork.tags, order: artwork.order } : a)
+        : [...artworks, { slug, title: artwork.title, imageUrl: artwork.imageUrl, tags: artwork.tags, order: artwork.order }]
+
+      await fetch('/api/content/gallery/index', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ artworks: updatedList }),
+      })
+
+      await load()
+      setForm(emptyArtwork())
+      setEditing(false)
+    } catch (err) {
+      console.error('Save error:', err)
+    } finally {
+      setSaving(false)
     }
-
-    await fetch(`/api/content/gallery/${slug}`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(artwork),
-    })
-
-    const existing = artworks.find(a => a.slug === slug)
-    const updatedList = existing
-      ? artworks.map(a => a.slug === slug ? { slug, title: artwork.title, imageUrl: artwork.imageUrl, tags: artwork.tags, order: artwork.order } : a)
-      : [...artworks, { slug, title: artwork.title, imageUrl: artwork.imageUrl, tags: artwork.tags, order: artwork.order }]
-
-    await fetch('/api/content/gallery/index', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ artworks: updatedList }),
-    })
-
-    await load()
-    setForm(emptyArtwork())
-    setEditing(false)
-    setSaving(false)
   }
 
   const remove = async (slug: string) => {
     if (!confirm('Delete this artwork?')) return
-    await fetch(`/api/content/gallery/${slug}`, { method: 'DELETE' })
-    await fetch('/api/content/gallery/index', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ artworks: artworks.filter(a => a.slug !== slug) }),
-    })
-    await load()
+    try {
+      await fetch(`/api/content/gallery/${slug}`, { method: 'DELETE' })
+      await fetch('/api/content/gallery/index', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ artworks: artworks.filter(a => a.slug !== slug) }),
+      })
+      await load()
+    } catch (err) {
+      console.error('Remove error:', err)
+    }
   }
 
   const startEdit = (art: GalleryIndex['artworks'][number]) => {

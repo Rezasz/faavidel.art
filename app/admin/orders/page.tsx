@@ -17,20 +17,24 @@ export default function AdminOrdersPage() {
   }
 
   const updateStatus = async (id: string, status: Order['status']) => {
-    const res = await fetch(`/api/content/orders/${id}`)
-    if (!res.ok) return
-    const order: Order = await res.json()
-    await fetch(`/api/content/orders/${id}`, {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ ...order, status }),
-    })
-    const updatedIndex = { orders: orders.map(o => o.id === id ? { ...o, status } : o) }
-    await fetch('/api/content/orders/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(updatedIndex),
-    })
-    setOrders(updatedIndex.orders)
-    if (selected?.id === id) setSelected(o => o ? { ...o, status } : o)
+    try {
+      const res = await fetch(`/api/content/orders/${id}`)
+      if (!res.ok) return
+      const order: Order = await res.json()
+      await fetch(`/api/content/orders/${id}`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...order, status }),
+      })
+      const updatedIndex = { orders: orders.map(o => o.id === id ? { ...o, status } : o) }
+      await fetch('/api/content/orders/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(updatedIndex),
+      })
+      setOrders(updatedIndex.orders)
+      if (selected?.id === id) setSelected(o => o ? { ...o, status } : o)
+    } catch (err) {
+      console.error('Update status error:', err)
+    }
   }
 
   return (

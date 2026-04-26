@@ -19,36 +19,45 @@ export default function AdminMusicPage() {
 
   const save = async () => {
     setSaving(true)
-    const track: Track = {
-      id: form.id ?? Date.now().toString(),
-      title: form.title!,
-      fileUrl: form.fileUrl!,
-      artworkUrl: form.artworkUrl ?? '',
-      duration: form.duration ?? '',
-      order: form.id && tracks.find(t => t.id === form.id) ? tracks.find(t => t.id === form.id)!.order : tracks.length,
-      createdAt: new Date().toISOString(),
+    try {
+      const track: Track = {
+        id: form.id ?? Date.now().toString(),
+        title: form.title!,
+        fileUrl: form.fileUrl!,
+        artworkUrl: form.artworkUrl ?? '',
+        duration: form.duration ?? '',
+        order: form.id && tracks.find(t => t.id === form.id) ? tracks.find(t => t.id === form.id)!.order : tracks.length,
+        createdAt: new Date().toISOString(),
+      }
+      const updated: MusicIndex = {
+        tracks: form.id && tracks.find(t => t.id === form.id)
+          ? tracks.map(t => t.id === form.id ? track : t)
+          : [...tracks, track]
+      }
+      await fetch('/api/content/music/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated),
+      })
+      await load()
+      setForm(emptyTrack())
+      setAdding(false)
+    } catch (err) {
+      console.error('Save error:', err)
+    } finally {
+      setSaving(false)
     }
-    const updated: MusicIndex = {
-      tracks: form.id && tracks.find(t => t.id === form.id)
-        ? tracks.map(t => t.id === form.id ? track : t)
-        : [...tracks, track]
-    }
-    await fetch('/api/content/music/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated),
-    })
-    await load()
-    setForm(emptyTrack())
-    setAdding(false)
-    setSaving(false)
   }
 
   const remove = async (id: string) => {
     if (!confirm('Delete this track?')) return
-    await fetch('/api/content/music/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ tracks: tracks.filter(t => t.id !== id) }),
-    })
-    await load()
+    try {
+      await fetch('/api/content/music/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ tracks: tracks.filter(t => t.id !== id) }),
+      })
+      await load()
+    } catch (err) {
+      console.error('Remove error:', err)
+    }
   }
 
   return (

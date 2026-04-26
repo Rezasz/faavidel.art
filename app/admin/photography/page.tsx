@@ -32,46 +32,58 @@ export default function AdminPhotographyPage() {
 
   const addSeries = async () => {
     if (!newSeries.title || !newSeries.coverUrl) return
-    const slug = newSeries.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    const detail: PhotoSeriesDetail = {
-      slug, title: newSeries.title, description: newSeries.description,
-      coverUrl: newSeries.coverUrl, order: series.length, createdAt: new Date().toISOString(), photos: [],
+    try {
+      const slug = newSeries.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+      const detail: PhotoSeriesDetail = {
+        slug, title: newSeries.title, description: newSeries.description,
+        coverUrl: newSeries.coverUrl, order: series.length, createdAt: new Date().toISOString(), photos: [],
+      }
+      await fetch(`/api/content/photography/${slug}/index`, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(detail),
+      })
+      await fetch('/api/content/photography/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ series: [...series, { slug, title: detail.title, coverUrl: detail.coverUrl, order: detail.order }] }),
+      })
+      setNewSeries({ title: '', description: '', coverUrl: '' })
+      await load()
+    } catch (err) {
+      console.error('Add series error:', err)
     }
-    await fetch(`/api/content/photography/${slug}/index`, {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(detail),
-    })
-    await fetch('/api/content/photography/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ series: [...series, { slug, title: detail.title, coverUrl: detail.coverUrl, order: detail.order }] }),
-    })
-    setNewSeries({ title: '', description: '', coverUrl: '' })
-    await load()
   }
 
   const addPhoto = async (seriesSlug: string) => {
     if (!newPhotoUrl) return
-    const id = Date.now().toString()
-    const photo: Photo = { id, url: newPhotoUrl, caption: newPhotoCaption, order: (seriesPhotos[seriesSlug] ?? []).length }
-    const photos = [...(seriesPhotos[seriesSlug] ?? []), photo]
-    const res = await fetch(`/api/content/photography/${seriesSlug}/index`)
-    const detail = res.ok ? await res.json() : {}
-    await fetch(`/api/content/photography/${seriesSlug}/index`, {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ ...detail, photos }),
-    })
-    setSeriesPhotos(p => ({ ...p, [seriesSlug]: photos }))
-    setNewPhotoUrl('')
-    setNewPhotoCaption('')
-    setAddingPhoto(null)
+    try {
+      const id = Date.now().toString()
+      const photo: Photo = { id, url: newPhotoUrl, caption: newPhotoCaption, order: (seriesPhotos[seriesSlug] ?? []).length }
+      const photos = [...(seriesPhotos[seriesSlug] ?? []), photo]
+      const res = await fetch(`/api/content/photography/${seriesSlug}/index`)
+      const detail = res.ok ? await res.json() : {}
+      await fetch(`/api/content/photography/${seriesSlug}/index`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...detail, photos }),
+      })
+      setSeriesPhotos(p => ({ ...p, [seriesSlug]: photos }))
+      setNewPhotoUrl('')
+      setNewPhotoCaption('')
+      setAddingPhoto(null)
+    } catch (err) {
+      console.error('Add photo error:', err)
+    }
   }
 
   const removeSeries = async (slug: string) => {
     if (!confirm('Delete this series and all photos?')) return
-    await fetch('/api/content/photography/index', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ series: series.filter(s => s.slug !== slug) }),
-    })
-    await load()
+    try {
+      await fetch('/api/content/photography/index', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ series: series.filter(s => s.slug !== slug) }),
+      })
+      await load()
+    } catch (err) {
+      console.error('Remove series error:', err)
+    }
   }
 
   return (

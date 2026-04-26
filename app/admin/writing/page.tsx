@@ -4,14 +4,17 @@ import { PostIndex, Post } from '@/lib/types'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { Plus, Trash2 } from 'lucide-react'
 
-const emptyPost = (): Partial<Post> => ({
+type PostForm = Partial<Post> & { tagsInput: string }
+
+const emptyPost = (): PostForm => ({
   title: '', excerpt: '', content: '', tags: [], status: 'draft',
   date: new Date().toISOString().split('T')[0],
+  tagsInput: '',
 })
 
 export default function AdminWritingPage() {
   const [posts, setPosts] = useState<PostIndex['posts']>([])
-  const [form, setForm] = useState<Partial<Post>>(emptyPost())
+  const [form, setForm] = useState<PostForm>(emptyPost())
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
 
@@ -30,9 +33,7 @@ export default function AdminWritingPage() {
       content: form.content ?? '',
       date: form.date ?? new Date().toISOString().split('T')[0],
       status: (form.status as 'published' | 'draft') ?? 'draft',
-      tags: typeof form.tags === 'string'
-        ? (form.tags as string).split(',').map(t => t.trim()).filter(Boolean)
-        : (form.tags as string[]) ?? [],
+      tags: form.tagsInput.split(',').map(t => t.trim()).filter(Boolean),
       createdAt: form.createdAt ?? new Date().toISOString(),
     }
     await fetch(`/api/content/writing/${slug}`, {
@@ -72,7 +73,7 @@ export default function AdminWritingPage() {
     const res = await fetch(`/api/content/writing/${slug}`)
     if (!res.ok) return
     const post = await res.json()
-    setForm(post)
+    setForm({ ...post, tagsInput: (post.tags ?? []).join(', ') })
     setEditing(true)
   }
 
@@ -100,6 +101,11 @@ export default function AdminWritingPage() {
               <option value="draft">Draft</option>
               <option value="published">Published</option>
             </select>
+            <input
+              placeholder="Tags (comma separated)"
+              value={form.tagsInput}
+              onChange={e => setForm(f => ({ ...f, tagsInput: e.target.value }))}
+              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam transition-colors" />
           </div>
           <RichTextEditor value={form.content ?? ''} onChange={content => setForm(f => ({ ...f, content }))} />
           <div className="flex gap-3 mt-4">

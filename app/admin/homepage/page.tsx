@@ -49,6 +49,20 @@ export default function AdminHomepagePage() {
           <textarea value={form.bioSnippet} onChange={e => setForm(f => ({ ...f, bioSnippet: e.target.value }))} rows={3}
             className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam resize-none" />
         </div>
+        <div>
+          <label className="font-sans text-xs tracking-wider uppercase text-charcoal/50 mb-1.5 block">
+            Featured Artwork Slugs (comma separated)
+          </label>
+          <input
+            placeholder="slug-one, slug-two, slug-three"
+            value={form.featuredArtworkSlugs.join(', ')}
+            onChange={e => setForm(f => ({
+              ...f,
+              featuredArtworkSlugs: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+            }))}
+            className="w-full border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam transition-colors"
+          />
+        </div>
         <button onClick={save} disabled={saving}
           className="bg-burnt text-white font-sans text-xs tracking-wider uppercase py-2.5 rounded hover:bg-burnt/85 disabled:opacity-50">
           {saving ? 'Saving...' : saved ? 'Saved ✓' : 'Save Changes'}

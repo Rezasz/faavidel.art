@@ -64,6 +64,7 @@ export default function AdminGalleryPage() {
 
   const remove = async (slug: string) => {
     if (!confirm('Delete this artwork?')) return
+    await fetch(`/api/content/gallery/${slug}`, { method: 'DELETE' })
     await fetch('/api/content/gallery/index', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

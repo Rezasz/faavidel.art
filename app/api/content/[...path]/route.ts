@@ -1,6 +1,6 @@
 // app/api/content/[...path]/route.ts
 import { auth } from '@/lib/auth'
-import { readJSON, writeJSON } from '@/lib/blob'
+import { readJSON, writeJSON, deleteBlob } from '@/lib/blob'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
@@ -25,5 +25,18 @@ export async function POST(
   const filePath = path.join('/') + '.json'
   const body = await req.json()
   await writeJSON(filePath, body)
+  return NextResponse.json({ ok: true })
+}
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
+  const session = await auth()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { path } = await params
+  const filePath = path.join('/') + '.json'
+  await deleteBlob(filePath)
   return NextResponse.json({ ok: true })
 }

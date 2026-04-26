@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { VideoIndex, VideoItem } from '@/lib/types'
+import FileUpload from '@/components/admin/FileUpload'
 import { Plus, Trash2 } from 'lucide-react'
 
 const emptyVideo = (): Partial<VideoItem> => ({ title: '', description: '', embedUrl: '', thumbnailUrl: '' })
@@ -67,6 +68,13 @@ export default function AdminVideoPage() {
               className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
             <textarea placeholder="Description" value={form.description ?? ''} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2}
               className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam col-span-2 resize-none" />
+          </div>
+          <div className="mb-3">
+            <FileUpload
+              label="Upload Thumbnail"
+              onUploaded={url => setForm(f => ({ ...f, thumbnailUrl: url }))}
+              currentUrl={form.thumbnailUrl}
+            />
           </div>
           <div className="flex gap-3">
             <button onClick={save} disabled={saving || !form.title || !form.embedUrl}

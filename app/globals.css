@@ -30,3 +30,12 @@
     @apply w-12 h-px bg-brand-amber/60 mt-2 mb-7;
   }
 }
+
+@keyframes orb-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.1); }
+}
+@keyframes orb-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

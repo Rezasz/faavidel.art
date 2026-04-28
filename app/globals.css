@@ -8,22 +8,25 @@
     cursor: none;
   }
   body {
-    @apply font-serif text-charcoal bg-white antialiased;
+    @apply font-serif text-brand-night bg-brand-parchment antialiased;
   }
   ::selection {
-    background: theme('colors.seafoam');
-    color: white;
+    background: theme('colors.brand.amber');
+    color: theme('colors.brand.night');
   }
 }
 
 @layer utilities {
   .section-label {
-    @apply font-sans text-xs tracking-[0.2em] uppercase text-seafoam;
+    @apply font-mono text-[11px] tracking-widest uppercase text-brand-amber/80;
   }
   .section-title {
-    @apply text-3xl text-ocean font-serif;
+    @apply text-3xl text-brand-cream font-serif italic;
   }
-  .section-rule {
-    @apply w-8 h-0.5 bg-burnt mt-1 mb-7;
+  .section-title-dark {
+    @apply text-3xl text-brand-night font-serif italic;
+  }
+  .painted-rule {
+    @apply w-12 h-px bg-brand-amber/60 mt-2 mb-7;
   }
 }

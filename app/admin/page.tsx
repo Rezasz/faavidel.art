@@ -1,12 +1,10 @@
 'use client'
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 export default function AdminLoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -22,7 +20,7 @@ export default function AdminLoginPage() {
       setError('Invalid credentials')
       setLoading(false)
     } else {
-      router.push('/admin/dashboard')
+      window.location.href = '/admin/dashboard'
     }
   }
 

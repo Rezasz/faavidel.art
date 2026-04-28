@@ -149,6 +149,19 @@ Replace the existing `PageTransition` component:
 - 600ms total
 - Reduced motion: simple opacity crossfade, 200ms
 
+### Ambient background music
+
+A piano arpeggio loop plays softly across the public site. File: `public/audio/ambient.mp3` (~234 KB).
+
+- **Default state:** muted on first load (browser autoplay policy). User must click to start.
+- **Control:** small floating toggle in the bottom-right of every public page. Plex Mono "♪ MUSIC" / "♪ MUTED" label, amber when playing. Tap area 44×44 minimum.
+- **Persistence:** the `<audio>` element lives in the root layout so it survives client-side navigation; play/mute state lives in a `MusicProvider` context backed by `localStorage` (`faavidel.music = "on" | "off"`). Default `"off"`.
+- **Loop:** seamless. Native `<audio loop>` is fine; if a perceptible click is heard at the loop point, switch to two cross-faded buffers via Web Audio.
+- **Volume:** 0.35 default, fade in over 800ms when user enables.
+- **`/music` page:** the ambient track auto-pauses when this page mounts and resumes when the user leaves (the track player on that page takes over).
+- **Reduced motion:** respect `prefers-reduced-motion` only as a hint — does not auto-mute, but reduced-motion users see a slightly more visible mute toggle (no "live" amber pulse).
+- **Admin:** ambient music is not played in `/admin/*` routes.
+
 ### Custom cursor
 
 Replace the existing `CustomCursor`:
@@ -185,6 +198,9 @@ components/
   ui/
     CustomCursor.tsx         # rewritten amber painted cursor
     Loader.tsx               # rewritten orb loader
+    BackgroundMusic.tsx      # floating mute toggle, amber-when-playing
+context/
+  MusicContext.tsx           # play/mute state, audio element ref, localStorage
 ```
 
 Existing components in `components/` are kept (no logic changes), only their styling/className is updated.
@@ -264,7 +280,7 @@ The existing demo seed (`scripts/seed-demo.ts`) is left intact for future resets
 
 1. **Foundation** — Tailwind palette + fonts, next.config images, gitignore (`.superpowers/`)
 2. **Atmosphere primitives** — `AtmosphericLayer`, `PaintedUnderline`, `PaintedDivider`, `RingedOrb`, `BleedImage`, `BrushButton`, `PaintedFrame`
-3. **Layout shell** — Nav, Footer, PageTransition, CustomCursor, Loader, root layout integration
+3. **Layout shell** — Nav, Footer, PageTransition, CustomCursor, Loader, BackgroundMusic + MusicContext, root layout integration
 4. **Public pages** — Home, Gallery (index + detail), Photography, Writing, Video, Music, Shop, About
 5. **Admin** — sidebar restyle, work-area painterly variant, all admin pages, login page fix (no AdminNav when unauthenticated)
 6. **Seeding** — `scripts/seed-paintings-wad.ts`, run against production Blob

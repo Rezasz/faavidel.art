@@ -39,3 +39,7 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+@keyframes painted-underline-draw {
+  to { width: var(--underline-final); }
+}

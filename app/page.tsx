@@ -1,14 +1,15 @@
 import { readJSON } from '@/lib/blob'
 import { HomepageContent, GalleryIndex, PostIndex } from '@/lib/types'
-import HeroSection from '@/components/home/HeroSection'
-import AnimatedSection from '@/components/ui/AnimatedSection'
 import Link from 'next/link'
-import Image from 'next/image'
+import BleedImage from '@/components/atmosphere/BleedImage'
+import PaintedUnderline from '@/components/atmosphere/PaintedUnderline'
+import PaintedDivider from '@/components/atmosphere/PaintedDivider'
+import BrushButton from '@/components/atmosphere/BrushButton'
 
 const defaultHomepage: HomepageContent = {
-  heroTitle: 'faavidel',
-  heroSubtitle: 'A world of creative work',
-  heroButtonText: 'Explore the Gallery',
+  heroTitle: 'painting is a way of breathing in another world.',
+  heroSubtitle: 'Multidisciplinary work by Faezeh Ghavidel — paintings, photography, writing, video and music.',
+  heroButtonText: 'Enter the gallery',
   featuredArtworkSlugs: [],
   bioSnippet: 'A multidisciplinary artist working across painting, photography, music, and writing.',
 }
@@ -27,91 +28,88 @@ export default async function HomePage() {
   const latestPosts = posts?.posts.filter(p => p.status === 'published').slice(0, 3) ?? []
 
   return (
-    <main>
-      <HeroSection
-        title={content.heroTitle}
-        subtitle={content.heroSubtitle}
-        buttonText={content.heroButtonText}
-      />
+    <main className="relative">
+      {/* Hero */}
+      <section className="relative min-h-screen flex items-center px-6 md:px-16">
+        <div className="relative z-10 max-w-3xl">
+          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/75 mb-4">
+            Faezeh Ghavidel · Multidisciplinary artist
+          </p>
+          <h1 className="font-serif italic text-brand-cream text-4xl md:text-6xl leading-[1.05]">
+            {content.heroTitle}
+          </h1>
+          <PaintedUnderline width={240} className="mt-6" />
+          <p className="mt-8 font-serif text-brand-cream/85 text-lg max-w-xl">
+            {content.heroSubtitle}
+          </p>
+          <div className="mt-8">
+            <BrushButton href="/gallery">{content.heroButtonText || 'Enter the gallery'}</BrushButton>
+          </div>
+        </div>
+      </section>
 
+      {/* Featured paintings */}
       {artworks.length > 0 && (
-        <section className="py-20 px-8 max-w-6xl mx-auto">
-          <AnimatedSection>
-            <p className="section-label">Featured Work</p>
-            <h2 className="section-title">Gallery</h2>
-            <div className="section-rule" />
-          </AnimatedSection>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {artworks.map((art, i) => (
-              <AnimatedSection key={art.slug} delay={i * 0.08}>
-                <Link href={`/gallery/${art.slug}`} className="group block aspect-[4/3] overflow-hidden rounded relative bg-off-white">
-                  <Image
-                    src={art.imageUrl}
-                    alt={art.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-ocean/0 group-hover:bg-ocean/60 transition-colors duration-300 flex items-end p-4">
-                    <span className="text-white font-sans text-xs tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {art.title}
-                    </span>
-                  </div>
-                </Link>
-              </AnimatedSection>
+        <section className="relative px-6 md:px-16 py-20 max-w-6xl mx-auto">
+          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Featured</p>
+          <h2 className="font-serif italic text-brand-cream text-3xl mt-2">Recent paintings</h2>
+          <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {artworks.map((art) => (
+              <Link key={art.slug} href={`/gallery/${art.slug}`} className="group block">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <BleedImage fill src={art.imageUrl} alt={art.title} sizes="(max-width:768px) 50vw, 33vw" />
+                </div>
+                <h3 className="font-serif italic text-xl text-brand-cream mt-3">{art.title}</h3>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <PaintedUnderline width={120} delay={0} />
+                </div>
+              </Link>
             ))}
           </div>
-          <AnimatedSection className="mt-8 text-center">
-            <Link href="/gallery" className="font-sans text-xs tracking-wider uppercase text-seafoam hover:text-ocean transition-colors">
-              View all work →
+          <div className="mt-10">
+            <Link href="/gallery" className="font-mono text-[11px] tracking-widest uppercase text-brand-amber hover:text-brand-cream transition-colors">
+              View all paintings →
             </Link>
-          </AnimatedSection>
-        </section>
-      )}
-
-      {latestPosts.length > 0 && (
-        <section className="py-20 px-8 bg-off-white-2">
-          <div className="max-w-3xl mx-auto">
-            <AnimatedSection>
-              <p className="section-label">Latest</p>
-              <h2 className="section-title">Writing</h2>
-              <div className="section-rule" />
-            </AnimatedSection>
-            <div className="flex flex-col divide-y divide-gray-200">
-              {latestPosts.map((post, i) => (
-                <AnimatedSection key={post.slug} delay={i * 0.1} direction="left">
-                  <Link href={`/writing/${post.slug}`} className="group flex justify-between items-center py-5">
-                    <div>
-                      <h3 className="font-serif text-lg text-charcoal group-hover:text-ocean transition-colors">
-                        {post.title}
-                      </h3>
-                      <p className="font-sans text-xs tracking-wider text-seafoam mt-1">
-                        {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                      </p>
-                    </div>
-                    <span className="text-burnt group-hover:translate-x-1 transition-transform text-lg">→</span>
-                  </Link>
-                </AnimatedSection>
-              ))}
-            </div>
           </div>
         </section>
       )}
 
-      <section className="bg-ocean py-20 px-8">
-        <AnimatedSection className="max-w-2xl mx-auto text-center">
-          <p className="section-label text-seafoam">The Artist</p>
-          <h2 className="text-3xl text-white font-serif mt-2 mb-1">About Faavidel</h2>
-          <div className="w-8 h-0.5 bg-burnt mx-auto mt-1 mb-7" />
-          <p className="text-white/70 font-serif leading-relaxed text-lg mb-8">
-            {content.bioSnippet}
-          </p>
-          <Link
-            href="/about"
-            className="inline-block border border-seafoam text-seafoam font-sans text-xs tracking-wider uppercase px-6 py-2.5 rounded hover:bg-seafoam hover:text-white transition-colors"
-          >
-            Read More →
-          </Link>
-        </AnimatedSection>
+      {/* Words */}
+      {latestPosts.length > 0 && (
+        <section className="relative px-6 md:px-16 py-20 max-w-3xl mx-auto">
+          <PaintedDivider />
+          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80 mt-6">Words</p>
+          <h2 className="font-serif italic text-brand-cream text-3xl mt-2">Writing</h2>
+          <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+          <div className="flex flex-col">
+            {latestPosts.map((post) => (
+              <Link key={post.slug} href={`/writing/${post.slug}`} className="group flex justify-between items-baseline py-5 border-b border-brand-cream/10">
+                <div>
+                  <h3 className="font-serif italic text-xl text-brand-cream group-hover:text-brand-amber transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/55 mt-1">
+                    {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+                  </p>
+                </div>
+                <span aria-hidden className="font-mono text-brand-amber group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* About teaser */}
+      <section className="relative px-6 md:px-16 py-20 max-w-3xl mx-auto text-center">
+        <PaintedDivider />
+        <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80 mt-6">The artist</p>
+        <h2 className="font-serif italic text-brand-cream text-3xl mt-2">About Faavidel</h2>
+        <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+        <p className="font-serif text-brand-cream/85 leading-relaxed text-lg mb-8">
+          {content.bioSnippet}
+        </p>
+        <BrushButton href="/about">Read more</BrushButton>
       </section>
     </main>
   )

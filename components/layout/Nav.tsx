@@ -1,89 +1,91 @@
 'use client'
-import { useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, Menu, X } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
 
 const links = [
-  { href: '/gallery', label: 'Gallery' },
+  { href: '/gallery',     label: 'Paintings' },
   { href: '/photography', label: 'Photography' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/music', label: 'Music' },
-  { href: '/video', label: 'Video' },
-  { href: '/about', label: 'About' },
+  { href: '/writing',     label: 'Writing' },
+  { href: '/video',       label: 'Video' },
+  { href: '/music',       label: 'Music' },
+  { href: '/shop',        label: 'Shop' },
+  { href: '/about',       label: 'About' },
 ]
 
 export default function Nav() {
+  const path = usePathname()
   const [open, setOpen] = useState(false)
   const { count } = useCart()
+  if (path.startsWith('/admin')) return null
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-ocean h-16 flex items-center justify-between px-8 md:px-12">
-      <Link href="/" className="text-white font-serif text-xl tracking-widest">
-        faavidel
-      </Link>
-
-      <div className="hidden md:flex gap-8">
-        {links.map((l, i) => (
-          <motion.div
-            key={l.href}
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 * i }}
-          >
+    <nav className="fixed top-0 left-0 right-0 z-40 px-6 md:px-9 py-5 flex items-center gap-7 text-brand-cream">
+      <Link href="/" className="font-serif italic text-2xl tracking-wide hover:text-brand-amber transition-colors">faavidel</Link>
+      <div className="hidden md:flex items-center gap-7 ml-auto">
+        {links.map(l => {
+          const active = path.startsWith(l.href)
+          return (
             <Link
+              key={l.href}
               href={l.href}
-              className="font-sans text-xs tracking-wider uppercase text-white/70 hover:text-white transition-colors"
+              className={`font-mono text-[11px] tracking-widest uppercase transition-colors
+                ${active ? 'text-brand-amber' : 'text-brand-cream/70 hover:text-brand-cream'}`}
             >
+              {active && <span aria-hidden className="text-brand-amber mr-1">·</span>}
               {l.label}
             </Link>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="flex items-center gap-4">
-        <Link href="/shop" className="relative">
-          <ShoppingBag className="text-white w-5 h-5" />
+          )
+        })}
+        <Link
+          href="/shop"
+          aria-label="Cart"
+          className="relative font-mono text-[11px] tracking-widest uppercase text-brand-cream/70 hover:text-brand-cream transition-colors"
+        >
+          Cart
           {count > 0 && (
-            <span className="absolute -top-2 -right-2 bg-burnt text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-sans">
+            <span className="absolute -top-2 -right-3 bg-brand-amber text-brand-night text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-mono">
               {count}
             </span>
           )}
         </Link>
-        <button className="md:hidden text-white" onClick={() => setOpen(!open)}>
-          {open ? <X size={20} /> : <Menu size={20} />}
+      </div>
+      <div className="md:hidden ml-auto flex items-center gap-5">
+        <Link
+          href="/shop"
+          aria-label="Cart"
+          className="relative font-mono text-[11px] tracking-widest uppercase text-brand-cream/80"
+        >
+          Cart
+          {count > 0 && (
+            <span className="absolute -top-2 -right-3 bg-brand-amber text-brand-night text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-mono">
+              {count}
+            </span>
+          )}
+        </Link>
+        <button
+          className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/80"
+          onClick={() => setOpen(o => !o)}
+          aria-label="Toggle menu"
+        >
+          {open ? 'Close' : 'Menu'}
         </button>
       </div>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-16 left-0 right-0 bg-ocean border-t border-white/10 flex flex-col p-6 gap-4 md:hidden"
-          >
-            {links.map(l => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="font-sans text-sm tracking-wider uppercase text-white/80 hover:text-white"
-              >
-                {l.label}
-              </Link>
-            ))}
+      {open && (
+        <div className="absolute top-full left-0 right-0 bg-brand-night/95 backdrop-blur md:hidden flex flex-col py-4">
+          {links.map(l => (
             <Link
-              href="/shop"
+              key={l.href}
+              href={l.href}
               onClick={() => setOpen(false)}
-              className="mt-2 bg-burnt text-white font-sans text-xs tracking-wider uppercase py-2 px-4 rounded text-center"
+              className="font-mono text-[12px] tracking-widest uppercase text-brand-cream/80 px-6 py-3"
             >
-              Shop
+              {l.label}
             </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          ))}
+        </div>
+      )}
     </nav>
   )
 }

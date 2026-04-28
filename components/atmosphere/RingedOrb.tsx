@@ -17,7 +17,7 @@ export default function RingedOrb({
   }
   return (
     <div
-      className={`pointer-events-none rounded-full ${className}`}
+      className={`relative pointer-events-none rounded-full ${className}`}
       style={{
         ...style,
         background: 'radial-gradient(circle, #FFE5A8 0%, #E8B86F 30%, rgba(232,184,111,0.45) 55%, transparent 80%)',

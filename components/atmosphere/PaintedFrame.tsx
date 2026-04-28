@@ -31,12 +31,11 @@ export default function PaintedFrame({ children, className = '', color = '#FBE7D
           fill="none"
           strokeLinecap="round"
           filter={`url(#${filterId})`}
-          style={{ strokeDasharray: 220, strokeDashoffset: 220, animation: 'frame-draw 1.6s ease-out forwards' }}
         >
-          <path d="M2 2 L 98 3"/>
-          <path d="M98 2 L 97 98" style={{ animationDelay: '.4s' }}/>
-          <path d="M98 98 L 2 97" style={{ animationDelay: '.8s' }}/>
-          <path d="M2 98 L 3 2" style={{ animationDelay: '1.2s' }}/>
+          <path d="M2 2 L 98 3"   style={{ strokeDasharray: 220, strokeDashoffset: 220, animation: 'frame-draw 1.6s ease-out 0s forwards' }}/>
+          <path d="M98 2 L 97 98" style={{ strokeDasharray: 220, strokeDashoffset: 220, animation: 'frame-draw 1.6s ease-out 0.4s forwards' }}/>
+          <path d="M98 98 L 2 97" style={{ strokeDasharray: 220, strokeDashoffset: 220, animation: 'frame-draw 1.6s ease-out 0.8s forwards' }}/>
+          <path d="M2 98 L 3 2"   style={{ strokeDasharray: 220, strokeDashoffset: 220, animation: 'frame-draw 1.6s ease-out 1.2s forwards' }}/>
         </g>
       </svg>
     </div>

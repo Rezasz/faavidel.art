@@ -31,6 +31,7 @@
   }
 }
 
+/* Reduced-motion fallbacks for the keyframes below are added in Phase 7 (consolidated sweep). */
 @keyframes orb-pulse {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.1); }

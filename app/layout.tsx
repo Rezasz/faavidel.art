@@ -7,6 +7,9 @@ import Footer from '@/components/layout/Footer'
 import CustomCursor from '@/components/ui/CustomCursor'
 import Loader from '@/components/ui/Loader'
 import PageTransition from '@/components/layout/PageTransition'
+import AtmosphericLayer from '@/components/atmosphere/AtmosphericLayer'
+import { MusicProvider } from '@/context/MusicContext'
+import BackgroundMusic from '@/components/ui/BackgroundMusic'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -32,15 +35,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${cormorant.variable} ${plexMono.variable}`}>
       <body>
-        <CartProvider>
-          <Loader />
-          <CustomCursor />
-          <Nav />
-          <PageTransition>
-            {children}
-          </PageTransition>
-          <Footer />
-        </CartProvider>
+        <MusicProvider>
+          <CartProvider>
+            <Loader />
+            <CustomCursor />
+            <AtmosphericLayer />
+            <Nav />
+            <PageTransition>
+              {children}
+            </PageTransition>
+            <Footer />
+            <BackgroundMusic />
+          </CartProvider>
+        </MusicProvider>
       </body>
     </html>
   )

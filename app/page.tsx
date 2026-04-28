@@ -2,7 +2,6 @@ import { readJSON } from '@/lib/blob'
 import { HomepageContent, GalleryIndex, PostIndex } from '@/lib/types'
 import HeroSection from '@/components/home/HeroSection'
 import AnimatedSection from '@/components/ui/AnimatedSection'
-import AtmosphericLayer from '@/components/atmosphere/AtmosphericLayer'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -29,7 +28,6 @@ export default async function HomePage() {
 
   return (
     <main>
-      <AtmosphericLayer />
       <HeroSection
         title={content.heroTitle}
         subtitle={content.heroSubtitle}

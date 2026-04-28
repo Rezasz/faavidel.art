@@ -5,21 +5,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ocean: '#0B3C5D',
-        burnt: '#A63D40',
-        seafoam: '#5FA8A9',
-        sand: '#D9C5A0',
-        charcoal: '#1F2A36',
-        'off-white': '#F8F7F5',
-        'off-white-2': '#F2F1EF',
+        brand: {
+          iris:      '#6B5BA8',
+          indigo:    '#3B4FB0',
+          lilac:     '#9D7EC8',
+          coral:     '#E89B7C',
+          amber:     '#E8B86F',
+          rose:      '#D86E78',
+          cream:     '#FBE7D0',
+          night:     '#0E0A1C',
+          parchment: '#FBF7EE',
+        },
       },
       fontFamily: {
-        serif: ['Georgia', 'serif'],
-        sans: ['system-ui', 'sans-serif'],
+        serif: ['var(--font-cormorant)', 'Georgia', 'serif'],
+        mono:  ['var(--font-plex-mono)', 'ui-monospace', 'monospace'],
       },
       letterSpacing: {
-        widest: '0.18em',
-        wider: '0.12em',
+        widest: '0.4em',
+        wider:  '0.25em',
+        wide:   '0.18em',
       },
     },
   },

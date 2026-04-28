@@ -73,7 +73,10 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       else if (target === 0) a.pause()
     }
     if (target > 0 && a.paused) {
-      a.play().catch(() => {/* autoplay blocked — keep state, user must retry */})
+      a.play().catch(() => {
+        // autoplay blocked — surface to UI by dispatching pause
+        dispatch({ type: 'pause' })
+      })
     }
     raf = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(raf)

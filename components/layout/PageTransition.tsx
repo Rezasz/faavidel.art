@@ -1,10 +1,18 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const path = usePathname()
-  const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const [reduced, setReduced] = useState(false)
+  useEffect(() => {
+    const m = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduced(m.matches)
+    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches)
+    m.addEventListener('change', onChange)
+    return () => m.removeEventListener('change', onChange)
+  }, [])
   return (
     <AnimatePresence mode="wait">
       <motion.div

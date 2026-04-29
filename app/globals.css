@@ -29,6 +29,9 @@
   .painted-rule {
     @apply w-12 h-px bg-brand-amber/60 mt-2 mb-7;
   }
+  .reading-panel {
+    @apply bg-brand-night/60 backdrop-blur-sm rounded-sm;
+  }
 }
 
 /* Reduced-motion fallbacks for the keyframes below are added in Phase 7 (consolidated sweep). */

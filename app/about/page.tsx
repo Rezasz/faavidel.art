@@ -31,7 +31,7 @@ export default async function AboutPage() {
           )}
         </div>
 
-        <div className="text-brand-cream">
+        <div className="reading-panel p-8 md:p-10 text-brand-cream self-start">
           <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">The artist</p>
           <h1 className="font-serif italic text-4xl md:text-5xl mt-2">Faezeh Ghavidel</h1>
           <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
@@ -56,10 +56,12 @@ export default async function AboutPage() {
       </div>
 
       <div className="max-w-2xl mx-auto mt-24">
-        <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Get in touch</p>
-        <h2 className="font-serif italic text-3xl text-brand-cream mt-2">Contact</h2>
-        <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
-        <ContactForm />
+        <div className="reading-panel p-8 md:p-12">
+          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Get in touch</p>
+          <h2 className="font-serif italic text-3xl text-brand-cream mt-2">Contact</h2>
+          <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+          <ContactForm />
+        </div>
       </div>
     </main>
   )

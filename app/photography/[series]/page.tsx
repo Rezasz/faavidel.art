@@ -22,10 +22,12 @@ export default async function SeriesPage({
       <Link href="/photography" className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65 hover:text-brand-amber transition-colors inline-block mb-8">
         ← All series
       </Link>
-      <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Series</p>
-      <h1 className="font-serif italic text-brand-cream text-4xl md:text-5xl mt-2">{data.title}</h1>
-      <div className="w-12 h-px bg-brand-amber/60 mt-3 mb-6" />
-      <p className="font-serif text-brand-cream/85 max-w-2xl mb-10 text-lg leading-relaxed">{data.description}</p>
+      <div className="reading-panel p-6 md:p-10 mb-10">
+        <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Series</p>
+        <h1 className="font-serif italic text-brand-cream text-4xl md:text-5xl mt-2">{data.title}</h1>
+        <div className="w-12 h-px bg-brand-amber/60 mt-3 mb-6" />
+        <p className="font-serif text-brand-cream/85 max-w-2xl text-lg leading-relaxed">{data.description}</p>
+      </div>
       <PhotoLightbox photos={photos} />
     </main>
   )

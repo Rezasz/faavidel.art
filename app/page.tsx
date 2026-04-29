@@ -51,9 +51,11 @@ export default async function HomePage() {
       {/* Featured paintings */}
       {artworks.length > 0 && (
         <section className="relative px-6 md:px-16 py-20 max-w-6xl mx-auto">
-          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Featured</p>
-          <h2 className="font-serif italic text-brand-cream text-3xl mt-2">Recent paintings</h2>
-          <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+          <div className="reading-panel p-6 md:p-10 mb-10 inline-block">
+            <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Featured</p>
+            <h2 className="font-serif italic text-brand-cream text-3xl mt-2">Recent paintings</h2>
+            <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {artworks.map((art) => (
               <Link key={art.slug} href={`/gallery/${art.slug}`} className="group block">
@@ -79,23 +81,25 @@ export default async function HomePage() {
       {latestPosts.length > 0 && (
         <section className="relative px-6 md:px-16 py-20 max-w-3xl mx-auto">
           <PaintedDivider />
-          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80 mt-6">Words</p>
-          <h2 className="font-serif italic text-brand-cream text-3xl mt-2">Writing</h2>
-          <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
-          <div className="flex flex-col">
-            {latestPosts.map((post) => (
-              <Link key={post.slug} href={`/writing/${post.slug}`} className="group flex justify-between items-baseline py-5 border-b border-brand-cream/10">
-                <div>
-                  <h3 className="font-serif italic text-xl text-brand-cream group-hover:text-brand-amber transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/55 mt-1">
-                    {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                  </p>
-                </div>
-                <span aria-hidden className="font-mono text-brand-amber group-hover:translate-x-1 transition-transform">→</span>
-              </Link>
-            ))}
+          <div className="reading-panel p-8 md:p-12 mt-6">
+            <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Words</p>
+            <h2 className="font-serif italic text-brand-cream text-3xl mt-2">Writing</h2>
+            <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+            <div className="flex flex-col">
+              {latestPosts.map((post) => (
+                <Link key={post.slug} href={`/writing/${post.slug}`} className="group flex justify-between items-baseline py-5 border-b border-brand-cream/10">
+                  <div>
+                    <h3 className="font-serif italic text-xl text-brand-cream group-hover:text-brand-amber transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/55 mt-1">
+                      {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+                    </p>
+                  </div>
+                  <span aria-hidden className="font-mono text-brand-amber group-hover:translate-x-1 transition-transform">→</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
@@ -103,13 +107,15 @@ export default async function HomePage() {
       {/* About teaser */}
       <section className="relative px-6 md:px-16 py-20 max-w-3xl mx-auto text-center">
         <PaintedDivider />
-        <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80 mt-6">The artist</p>
-        <h2 className="font-serif italic text-brand-cream text-3xl mt-2">About Faavidel</h2>
-        <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
-        <p className="font-serif text-brand-cream/85 leading-relaxed text-lg mb-8">
-          {content.bioSnippet}
-        </p>
-        <BrushButton href="/about">Read more</BrushButton>
+        <div className="reading-panel p-8 md:p-12 mt-6">
+          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">The artist</p>
+          <h2 className="font-serif italic text-brand-cream text-3xl mt-2">About Faavidel</h2>
+          <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+          <p className="font-serif text-brand-cream/85 leading-relaxed text-lg mb-8">
+            {content.bioSnippet}
+          </p>
+          <BrushButton href="/about">Read more</BrushButton>
+        </div>
       </section>
     </main>
   )

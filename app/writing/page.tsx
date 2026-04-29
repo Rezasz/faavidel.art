@@ -10,14 +10,16 @@ export default async function WritingPage() {
 
   return (
     <main className="relative min-h-screen px-6 md:px-12 py-24 max-w-3xl mx-auto">
-      <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Words</p>
-      <h1 className="font-serif italic text-brand-cream text-4xl md:text-5xl mt-2">Writing</h1>
-      <div className="w-12 h-px bg-brand-amber/60 mt-3 mb-10" />
-      {posts.length === 0 ? (
-        <p className="font-serif italic text-brand-cream/60 text-lg">No posts yet.</p>
-      ) : (
-        <PostList posts={posts} />
-      )}
+      <div className="reading-panel p-8 md:p-12">
+        <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Words</p>
+        <h1 className="font-serif italic text-brand-cream text-4xl md:text-5xl mt-2">Writing</h1>
+        <div className="w-12 h-px bg-brand-amber/60 mt-3 mb-10" />
+        {posts.length === 0 ? (
+          <p className="font-serif italic text-brand-cream/60 text-lg">No posts yet.</p>
+        ) : (
+          <PostList posts={posts} />
+        )}
+      </div>
     </main>
   )
 }

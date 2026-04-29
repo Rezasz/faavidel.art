@@ -24,16 +24,18 @@ export default async function ArtworkPage({
         <RingedOrb size={48} className="absolute top-[14%] right-[10%]" />
       </section>
 
-      <section className="relative max-w-3xl mx-auto px-6 md:px-12 py-20 text-brand-cream">
-        <Link href="/gallery" className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65 hover:text-brand-amber transition-colors">
+      <section className="relative max-w-3xl mx-auto px-6 md:px-12 py-20">
+        <Link href="/gallery" className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65 hover:text-brand-amber transition-colors inline-block mb-8">
           ← Back to paintings
         </Link>
-        <p className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65 mt-10">{artwork.year}</p>
-        <h1 className="font-serif italic text-4xl md:text-5xl mt-3">{artwork.title}</h1>
-        <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
-        <p className="font-serif text-brand-cream/85 text-lg leading-relaxed">{artwork.description}</p>
-        <div className="mt-6 flex gap-4 flex-wrap font-mono text-[10px] uppercase tracking-widest text-brand-cream/55">
-          {artwork.tags.map(t => <span key={t}>#{t}</span>)}
+        <div className="reading-panel p-8 md:p-12 text-brand-cream">
+          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65">{artwork.year}</p>
+          <h1 className="font-serif italic text-4xl md:text-5xl mt-3">{artwork.title}</h1>
+          <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+          <p className="font-serif text-brand-cream/85 text-lg leading-relaxed">{artwork.description}</p>
+          <div className="mt-6 flex gap-4 flex-wrap font-mono text-[10px] uppercase tracking-widest text-brand-cream/55">
+            {artwork.tags.map(t => <span key={t}>#{t}</span>)}
+          </div>
         </div>
       </section>
     </main>

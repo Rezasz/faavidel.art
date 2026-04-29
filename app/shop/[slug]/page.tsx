@@ -56,7 +56,7 @@ export default function ProductPage() {
           </div>
         </div>
 
-        <div className="text-brand-cream">
+        <div className="reading-panel p-8 md:p-10 text-brand-cream self-start">
           <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">${product.price.toFixed(2)}</p>
           <h1 className="font-serif italic text-4xl md:text-5xl mt-2">{product.title}</h1>
           <div className="w-12 h-px bg-brand-amber/60 mt-3 mb-6" />

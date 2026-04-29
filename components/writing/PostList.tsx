@@ -2,31 +2,30 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { PostIndex } from '@/lib/types'
+import PaintedDivider from '@/components/atmosphere/PaintedDivider'
 
 export default function PostList({ posts }: { posts: PostIndex['posts'] }) {
   const published = posts.filter(p => p.status === 'published')
   return (
-    <div className="flex flex-col divide-y divide-gray-100">
+    <div className="flex flex-col">
       {published.map((post, i) => (
         <motion.div
           key={post.slug}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: i * 0.07 }}
+          transition={{ duration: 0.5, delay: i * 0.06 }}
         >
-          <Link href={`/writing/${post.slug}`} className="group flex justify-between items-center py-6">
-            <div>
-              <h2 className="font-serif text-xl text-charcoal group-hover:text-ocean transition-colors mb-1">
-                {post.title}
-              </h2>
-              <p className="font-sans text-sm text-charcoal/60 mb-2 line-clamp-1">{post.excerpt}</p>
-              <p className="font-sans text-xs tracking-wider text-seafoam">
-                {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </p>
-            </div>
-            <span className="text-burnt group-hover:translate-x-1.5 transition-transform text-xl ml-6 shrink-0">→</span>
-          </Link>
+          <article className="py-8">
+            <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/60">
+              {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+            <h2 className="font-serif italic text-3xl text-brand-cream mt-2">
+              <Link href={`/writing/${post.slug}`} className="hover:text-brand-amber transition-colors">{post.title}</Link>
+            </h2>
+            <p className="font-serif text-brand-cream/80 mt-3 max-w-2xl">{post.excerpt}</p>
+          </article>
+          {i < published.length - 1 && <PaintedDivider />}
         </motion.div>
       ))}
     </div>

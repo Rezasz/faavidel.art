@@ -1,8 +1,8 @@
 # faavidel.art
 
-Multidisciplinary creative portfolio and shop for the artist Faavidel — showcasing visual art, photography, writing, video, and music with an integrated e-commerce shop and a full custom admin CMS.
+Multidisciplinary creative portfolio for the artist Faavidel (Faezeh Ghavidel) — paintings, exhibitions, writing, video, music, and curated marketplace links — with a custom admin panel.
 
-**Live:** [faavidel.art](https://faavidel.art)  
+**Live:** [faavidel.art](https://faavidel.art)
 **Repo:** [github.com/Rezasz/faavidel.art](https://github.com/Rezasz/faavidel.art)
 
 ---
@@ -11,102 +11,138 @@ Multidisciplinary creative portfolio and shop for the artist Faavidel — showca
 
 | Layer | Choice |
 |---|---|
-| Framework | Next.js 16 (App Router, TypeScript) |
-| Styling | Tailwind CSS v3 |
-| Animations | Framer Motion + GSAP |
-| Storage | Vercel Blob (JSON + media) |
-| Auth | NextAuth.js v5 (credentials) |
-| Payments | Stripe v22 |
+| Framework | Next.js 16 (App Router, TypeScript, Turbopack) |
+| Styling | Tailwind CSS v3 with brand tokens |
+| Type | Cormorant Garamond + IBM Plex Mono (`next/font`) |
+| Animation | Framer Motion (page transitions + hover) |
+| Storage | Vercel Blob (JSON content + uploaded media) |
+| Auth | NextAuth.js v5 (credentials, JWT 24h) |
 | Email | Resend |
-| Deployment | Vercel |
+| Analytics | Google Analytics G‑VZF34SJW3H (`next/script`) |
+| Deployment | Vercel (auto on push to `main`) |
 
 ---
 
-## Local Development
+## Local development
 
 ```bash
 npm install
-cp .env.local.example .env.local   # fill in your values
+cp .env.local.example .env.local      # fill in your values
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Environment Variables
+## Environment variables
 
 ```env
 NEXTAUTH_SECRET=          # openssl rand -base64 32
 NEXTAUTH_URL=             # http://localhost:3000 (dev) / https://faavidel.art (prod)
 ADMIN_USER=admin
-ADMIN_PASS=               # your admin password
+ADMIN_PASS=               # admin password
 BLOB_READ_WRITE_TOKEN=    # from Vercel Blob storage dashboard
-STRIPE_SECRET_KEY=        # sk_live_... or sk_test_...
-STRIPE_WEBHOOK_SECRET=    # whsec_... from Stripe webhook endpoint
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=  # pk_live_... or pk_test_...
-RESEND_API_KEY=           # from resend.com
+RESEND_API_KEY=           # from resend.com (used for transactional email)
 ```
+
+No Stripe / cart variables — on-site commerce was removed; the shop links to external Web3 marketplaces.
 
 ---
 
-## Admin Panel
+## Public pages
 
-Access at `/admin` — username `admin`, password set via `ADMIN_PASS`.
-
-Manages:
-- **Gallery** — upload artwork images, titles, descriptions, tags
-- **Photography** — series + individual photos with lightbox
-- **Writing** — markdown editor with publish/draft toggle
-- **Video** — YouTube/Vimeo links (auto-converted) or direct video upload
-- **Music** — audio file upload or YouTube link; artwork per track
-- **Shop** — products with images, price, stock, status
-- **Orders** — view orders, mark as shipped
-- **Homepage** — hero text, featured artworks, bio snippet
-- **About** — bio, profile photo, Instagram, WhatsApp, Linktree, email
-- **Settings** — site title, SEO meta, contact email
+| Route | Description |
+|---|---|
+| `/` | Home — wordmark, rotating prose hero, featured paintings, latest writing, about teaser |
+| `/gallery` | Painting grid (currently 18 works seeded from World Art Dubai 2026), tag filter, gentle amber light sweep |
+| `/gallery/[slug]` | Single painting — windowed view on neutral black background, prev/next navigation |
+| `/exhibitions` | Year-grouped list (2025 / 2024 / 2023) of 16 exhibitions sourced from `scripts/exhibitions-data.json` |
+| `/writing` | Essays — Cormorant title list with painted dividers |
+| `/writing/[slug]` | Single post on a parchment reading surface |
+| `/video` | Latest videos from `youtube.com/@Faavidel`, fetched server-side from the channel's Atom feed (refreshed daily) |
+| `/music` | Single SoundCloud iframe driven by a URL stored in blob (refreshed daily) |
+| `/shop` | Five external marketplaces (Wallet Bubbles, hug.art, Drip.haus, Manifold, Objkt) — content editable via admin |
+| `/about` | Self‑portrait + bio + social links (Instagram, WhatsApp, Linktree, LinkedIn, Email) + WhatsApp contact form |
+| `/disclaimer` | Site disclaimer |
+| `/cookies` | Cookie policy |
 
 ---
 
-## Content Seeding
+## Painterly atmosphere
 
-Initialize empty content structure (first deploy):
+Every public page sits over a shared `<AtmosphericLayer />` that renders a single static painting + vignette + film grain (no animations, no SVG filters — keeps the GPU cost near zero). A bottom‑right floating button toggles ambient music (the artist's own track at `public/audio/ambient.m4a`); preference is stored in `localStorage`.
+
+Reading panels (60% night + backdrop blur) sit behind text content for legibility. The custom cursor was removed in favor of the native cursor for performance.
+
+---
+
+## Admin panel
+
+Access at `/admin` (username `admin`, password from `ADMIN_PASS`). The admin shell stays on a parchment work surface with subtle painting ghost.
+
+| Route | Manages |
+|---|---|
+| `/admin/dashboard` | Counts of artworks + posts |
+| `/admin/gallery` | Paintings — upload, title, description, tags, year |
+| `/admin/writing` | Markdown posts with publish/draft toggle |
+| `/admin/music` | The single SoundCloud URL |
+| `/admin/shop` | The five marketplace cards (title, URL, domain, description, reorder, delete, add) |
+| `/admin/homepage` | Hero text + featured artwork slugs + bio snippet |
+| `/admin/about` | Bio, profile photo, Instagram, WhatsApp, Linktree, LinkedIn, email |
+| `/admin/settings` | Site title, SEO description, contact email |
+
+Photography, Video, and Shop product CRUD were removed. The shop now links to external Web3 marketplaces; videos pull from YouTube; music embeds SoundCloud.
+
+---
+
+## Content seeding
+
+Initialize the gallery with the 18 World Art Dubai 2026 paintings (idempotent — re‑running skips already‑uploaded images):
+
 ```bash
-BLOB_READ_WRITE_TOKEN=<token> npx tsx scripts/seed.ts
+BLOB_READ_WRITE_TOKEN=<token> npx tsx scripts/seed-paintings-wad.ts
 ```
 
-Load demo content with 12 artworks, 3 photo series, 4 essays, 5 shop products:
-```bash
-BLOB_READ_WRITE_TOKEN=<token> npx tsx scripts/seed-demo.ts
-```
+Exhibition data lives in `scripts/exhibitions-data.json` and ships with the repo (no seeding needed).
 
 ---
 
 ## Deployment
 
-1. Import repo in [vercel.com](https://vercel.com)
-2. Add **Vercel Blob** storage (must be public access)
-3. Set all environment variables in Vercel project settings
-4. Deploy — then run the seed script once
-5. Add Stripe webhook: `https://faavidel.art/api/webhooks/stripe` → event `checkout.session.completed`
-6. Connect domain `faavidel.art`
+1. Import the repo at [vercel.com](https://vercel.com).
+2. Provision a **Vercel Blob** store (public access).
+3. Set the env vars above in Vercel project settings.
+4. Push to `main` — Vercel auto‑deploys.
+5. Run the gallery seed once (above) if the gallery is empty.
+6. Connect the `faavidel.art` domain in Vercel.
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
-app/                     Next.js App Router pages + API routes
-components/              Reusable UI, layout, and feature components
-lib/                     Types, Blob helpers, auth, Stripe, Resend
-context/                 Cart context (localStorage-backed)
-scripts/                 seed.ts, seed-demo.ts
-docs/superpowers/        Design spec + implementation plan
+app/                      # Next.js App Router pages + API routes
+  admin/                  # Authenticated admin
+  api/content/[...]       # Generic blob read/write API (auth-gated on writes)
+components/
+  atmosphere/             # AtmosphericLayer, BleedImage, RingedOrb, PaintedDivider, BrushButton, etc.
+  layout/                 # Nav, Footer, PageTransition
+  home/                   # HeroQuoteRotator
+  ui/                     # BackgroundMusic, Loader, CustomCursor (no-op)
+context/                  # MusicContext (ambient audio state)
+lib/                      # blob.ts, types.ts, auth.ts, slug.ts, resend.ts
+public/                   # audio/ambient.m4a, about/portrait.jpg, exhibitions/*.jpg
+scripts/                  # seed-paintings-wad.ts, exhibitions-data.json, copy-exhibition-images.mjs, test-music-context.ts
+docs/superpowers/         # design specs + implementation plans
 ```
+
+---
 
 ## Contact
 
 - Instagram: [@faa.videl](https://www.instagram.com/faa.videl)
 - WhatsApp: [+971 55 589 5441](https://wa.me/971555895441)
 - Linktree: [linktr.ee/faavidel](https://linktr.ee/faavidel)
+- LinkedIn: [linkedin.com/in/faavidel-68843a144](https://www.linkedin.com/in/faavidel-68843a144/)
 - Email: info@faavidel.art

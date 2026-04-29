@@ -85,52 +85,6 @@ export interface MusicIndex {
   tracks: Track[]
 }
 
-export interface Product {
-  slug: string
-  title: string
-  description: string
-  price: number
-  images: string[]
-  stock: number
-  status: 'active' | 'archived'
-  createdAt: string
-}
-
-export interface ProductIndex {
-  products: Pick<Product, 'slug' | 'title' | 'price' | 'images' | 'stock' | 'status'>[]
-}
-
-export interface OrderItem {
-  productSlug: string
-  productTitle: string
-  price: number
-  quantity: number
-  imageUrl: string
-}
-
-export interface Order {
-  id: string
-  items: OrderItem[]
-  customerEmail: string
-  customerName: string
-  shippingAddress: {
-    line1: string
-    line2?: string
-    city: string
-    state: string
-    postalCode: string
-    country: string
-  }
-  total: number
-  status: 'pending' | 'paid' | 'shipped' | 'delivered'
-  stripeSessionId: string
-  createdAt: string
-}
-
-export interface OrderIndex {
-  orders: Pick<Order, 'id' | 'customerEmail' | 'total' | 'status' | 'createdAt'>[]
-}
-
 export interface HomepageContent {
   heroTitle: string
   heroSubtitle: string
@@ -154,12 +108,4 @@ export interface SiteSettings {
   siteDescription: string
   contactEmail: string
   metaImage: string
-}
-
-export interface CartItem {
-  productSlug: string
-  title: string
-  price: number
-  quantity: number
-  imageUrl: string
 }

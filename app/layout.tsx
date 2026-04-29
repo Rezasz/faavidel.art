@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Cormorant_Garamond, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
-import { CartProvider } from '@/context/CartContext'
 import Nav from '@/components/layout/Nav'
 import Footer from '@/components/layout/Footer'
 import CustomCursor from '@/components/ui/CustomCursor'
@@ -36,17 +35,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${cormorant.variable} ${plexMono.variable}`}>
       <body>
         <MusicProvider>
-          <CartProvider>
-            <Loader />
-            <CustomCursor />
-            <AtmosphericLayer />
-            <Nav />
-            <PageTransition>
-              {children}
-            </PageTransition>
-            <Footer />
-            <BackgroundMusic />
-          </CartProvider>
+          <Loader />
+          <CustomCursor />
+          <AtmosphericLayer />
+          <Nav />
+          <PageTransition>
+            {children}
+          </PageTransition>
+          <Footer />
+          <BackgroundMusic />
         </MusicProvider>
       </body>
     </html>

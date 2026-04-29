@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { useCart } from '@/context/CartContext'
 
 const links = [
   { href: '/gallery',     label: 'Paintings' },
@@ -17,7 +16,6 @@ const links = [
 export default function Nav() {
   const path = usePathname()
   const [open, setOpen] = useState(false)
-  const { count } = useCart()
   if (path.startsWith('/admin')) return null
 
   return (
@@ -38,32 +36,8 @@ export default function Nav() {
             </Link>
           )
         })}
-        <Link
-          href="/shop"
-          aria-label="Cart"
-          className="relative font-mono text-[11px] tracking-widest uppercase text-brand-cream/70 hover:text-brand-cream transition-colors"
-        >
-          Cart
-          {count > 0 && (
-            <span className="absolute -top-2 -right-3 bg-brand-amber text-brand-night text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-mono">
-              {count}
-            </span>
-          )}
-        </Link>
       </div>
       <div className="md:hidden ml-auto flex items-center gap-5">
-        <Link
-          href="/shop"
-          aria-label="Cart"
-          className="relative font-mono text-[11px] tracking-widest uppercase text-brand-cream/80"
-        >
-          Cart
-          {count > 0 && (
-            <span className="absolute -top-2 -right-3 bg-brand-amber text-brand-night text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-mono">
-              {count}
-            </span>
-          )}
-        </Link>
         <button
           className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/80"
           onClick={() => setOpen(o => !o)}

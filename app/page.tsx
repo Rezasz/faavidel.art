@@ -5,6 +5,7 @@ import BleedImage from '@/components/atmosphere/BleedImage'
 import PaintedUnderline from '@/components/atmosphere/PaintedUnderline'
 import PaintedDivider from '@/components/atmosphere/PaintedDivider'
 import BrushButton from '@/components/atmosphere/BrushButton'
+import HeroQuoteRotator from '@/components/home/HeroQuoteRotator'
 
 const defaultHomepage: HomepageContent = {
   heroTitle: 'painting is a way of breathing in another world.',
@@ -35,13 +36,13 @@ export default async function HomePage() {
           <p className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/75 mb-4">
             Faezeh Ghavidel · Multidisciplinary artist
           </p>
-          <h1 className="font-serif italic text-brand-cream text-4xl md:text-6xl leading-[1.05]">
-            {content.heroTitle}
+          <h1 className="font-serif italic text-brand-cream text-3xl md:text-5xl leading-[1.05]">
+            faavidel
           </h1>
-          <PaintedUnderline width={240} className="mt-6" />
-          <p className="mt-8 font-serif text-brand-cream/85 text-lg max-w-xl">
-            {content.heroSubtitle}
-          </p>
+          <PaintedUnderline width={200} className="mt-5" />
+          <div className="mt-7 max-w-2xl min-h-[12rem] md:min-h-[10rem]">
+            <HeroQuoteRotator />
+          </div>
           <div className="mt-8">
             <BrushButton href="/gallery">{content.heroButtonText || 'Enter the gallery'}</BrushButton>
           </div>

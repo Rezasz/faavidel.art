@@ -15,8 +15,20 @@ const defaultAbout: AboutContent = {
   linktree: 'https://linktr.ee/faavidel',
 }
 
+const ALLOWED_PHOTO_HOSTS = ['vercel-storage.com', 'public.blob.vercel-storage.com', 'd1l8km4g5s76x5.cloudfront.net']
+function safePhotoUrl(raw: string | undefined): string {
+  if (!raw) return '/about/portrait.jpg'
+  if (raw.startsWith('/')) return raw
+  try {
+    const u = new URL(raw)
+    if (ALLOWED_PHOTO_HOSTS.some(h => u.hostname.endsWith(h))) return raw
+  } catch { /* fallthrough */ }
+  return '/about/portrait.jpg'
+}
+
 export default async function AboutPage() {
   const about = (await readJSON<AboutContent>('about.json')) ?? defaultAbout
+  const photoSrc = safePhotoUrl(about.profilePhotoUrl)
 
   return (
     <main className="relative min-h-screen px-6 md:px-12 py-24">
@@ -25,7 +37,7 @@ export default async function AboutPage() {
           <div className="relative aspect-[4/5] max-w-sm overflow-hidden rounded-sm shadow-2xl">
             <BleedImage
               fill
-              src={about.profilePhotoUrl || '/about/portrait.jpg'}
+              src={photoSrc}
               alt="Faezeh Ghavidel"
               sizes="(max-width:768px) 100vw, 400px"
             />

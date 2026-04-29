@@ -1,7 +1,6 @@
 import { readJSON } from '@/lib/blob'
 import { VideoIndex } from '@/lib/types'
 import VideoGrid from '@/components/video/VideoGrid'
-import AnimatedSection from '@/components/ui/AnimatedSection'
 
 export const revalidate = 60
 
@@ -10,14 +9,12 @@ export default async function VideoPage() {
   const videos = (data?.videos ?? []).sort((a, b) => a.order - b.order)
 
   return (
-    <main className="min-h-screen py-20 px-8 max-w-5xl mx-auto">
-      <AnimatedSection>
-        <p className="section-label">Moving Image</p>
-        <h1 className="section-title">Video</h1>
-        <div className="section-rule" />
-      </AnimatedSection>
+    <main className="relative min-h-screen px-6 md:px-12 py-24 max-w-5xl mx-auto">
+      <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Moving image</p>
+      <h1 className="font-serif italic text-brand-cream text-4xl md:text-5xl mt-2">Video</h1>
+      <div className="w-12 h-px bg-brand-amber/60 mt-3 mb-10" />
       {videos.length === 0 ? (
-        <p className="font-serif text-gray-400 text-lg">No videos yet.</p>
+        <p className="font-serif italic text-brand-cream/60 text-lg">No videos yet.</p>
       ) : (
         <VideoGrid videos={videos} />
       )}

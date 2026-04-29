@@ -17,15 +17,15 @@ export default function GalleryGrid({ artworks }: Props) {
 
   return (
     <>
-      <div className="flex gap-3 flex-wrap mb-8">
+      <div className="flex gap-2 flex-wrap mb-10">
         {['All', ...allTags].map(tag => (
           <button
             key={tag}
             onClick={() => setActive(tag)}
-            className={`font-sans text-xs tracking-wider uppercase px-3 py-1 rounded-full border transition-colors
+            className={`font-mono text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors
               ${active === tag
-                ? 'border-seafoam bg-seafoam/10 text-seafoam'
-                : 'border-gray-200 text-gray-400 hover:border-seafoam hover:text-seafoam'}`}
+                ? 'border-brand-amber bg-brand-amber text-brand-night'
+                : 'border-brand-cream/30 text-brand-cream/80 hover:bg-brand-amber hover:text-brand-night'}`}
           >
             {tag}
           </button>
@@ -33,7 +33,7 @@ export default function GalleryGrid({ artworks }: Props) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {filtered.map((art, i) => (
-          <ArtworkCard key={art.slug} {...art} index={i} />
+          <ArtworkCard key={art.slug} {...art} index={i} total={filtered.length} />
         ))}
       </div>
     </>

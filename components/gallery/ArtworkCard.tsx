@@ -17,12 +17,11 @@ export default function ArtworkCard({ slug, title, imageUrl, index, total }: Pro
   return (
     <motion.div
       initial={{ opacity: 0, y: 28, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: '-60px' }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
         duration: 0.9,
         delay: index * 0.12,
-        ease: [0.22, 1, 0.36, 1], // gentle ease-out
+        ease: [0.22, 1, 0.36, 1],
       }}
     >
       <Link href={`/gallery/${slug}`} className="group block" data-cursor-hover>

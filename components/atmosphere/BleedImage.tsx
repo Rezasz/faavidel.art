@@ -10,25 +10,24 @@ interface BleedImageProps {
   fill?: boolean
   className?: string
   priority?: boolean
-  scale?: number          // displacement strength (default 14)
+  scale?: number          // displacement strength (default 6)
   sizes?: string
 }
 
 export default function BleedImage({
-  src, alt, width, height, fill, className = '', priority, scale = 14, sizes,
+  src, alt, width, height, fill, className = '', priority, scale = 6, sizes,
 }: BleedImageProps) {
   const id = useId().replace(/[:]/g, '-')
   const filterId = `bleed-${id}`
+  const wrapperClass = fill ? `absolute inset-0 ${className}` : `relative ${className}`
 
   return (
-    <div className={`relative ${className}`} style={{ filter: `url(#${filterId})` }}>
+    <div className={wrapperClass} style={{ filter: `url(#${filterId})` }}>
       <svg width="0" height="0" className="absolute" aria-hidden>
         <defs>
           <filter id={filterId}>
-            <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves={2} seed={3} result="t">
-              <animate attributeName="baseFrequency" dur="28s" values="0.012;0.018;0.012" repeatCount="indefinite"/>
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="t" scale={scale}/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves={2} seed={3}/>
+            <feDisplacementMap in="SourceGraphic" scale={scale}/>
           </filter>
         </defs>
       </svg>

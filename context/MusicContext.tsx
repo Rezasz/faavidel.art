@@ -50,7 +50,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   // mount audio element once
   useEffect(() => {
-    const a = new Audio('/audio/ambient.mp3')
+    const a = new Audio('/audio/ambient.m4a')
     a.loop = true
     a.preload = 'auto'
     a.volume = 0

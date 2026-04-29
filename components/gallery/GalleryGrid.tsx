@@ -31,10 +31,29 @@ export default function GalleryGrid({ artworks }: Props) {
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {filtered.map((art, i) => (
-          <ArtworkCard key={art.slug} {...art} index={i} total={filtered.length} />
-        ))}
+      <div className="relative">
+        {/* Continuous diagonal light sweep — cheap, GPU-accelerated */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+          style={{ animation: 'gallery-sweep 9s ease-in-out infinite' }}
+        >
+          <div
+            className="absolute -inset-y-[20%] w-[40%]"
+            style={{
+              background:
+                'linear-gradient(115deg, transparent 0%, rgba(232,184,111,0.18) 45%, rgba(255,229,168,0.32) 50%, rgba(232,184,111,0.18) 55%, transparent 100%)',
+              mixBlendMode: 'screen',
+              filter: 'blur(40px)',
+              transform: 'translate3d(0,0,0)',
+            }}
+          />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 relative">
+          {filtered.map((art, i) => (
+            <ArtworkCard key={art.slug} {...art} index={i} total={filtered.length} />
+          ))}
+        </div>
       </div>
     </>
   )

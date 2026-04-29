@@ -16,10 +16,14 @@ interface Props {
 export default function ArtworkCard({ slug, title, imageUrl, index, total }: Props) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
+      initial={{ opacity: 0, y: 28, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{
+        duration: 0.9,
+        delay: index * 0.12,
+        ease: [0.22, 1, 0.36, 1], // gentle ease-out
+      }}
     >
       <Link href={`/gallery/${slug}`} className="group block" data-cursor-hover>
         <div className="relative aspect-[4/5] overflow-hidden">

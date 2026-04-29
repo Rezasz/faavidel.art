@@ -31,7 +31,7 @@ export default async function HomePage() {
     <main className="relative">
       {/* Hero */}
       <section className="relative min-h-screen flex items-center px-6 md:px-16">
-        <div className="relative z-10 max-w-3xl">
+        <div className="reading-panel relative z-10 max-w-3xl p-8 md:p-12">
           <p className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/75 mb-4">
             Faezeh Ghavidel · Multidisciplinary artist
           </p>

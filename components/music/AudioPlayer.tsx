@@ -80,7 +80,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
           <div className="flex items-center gap-4 mb-4">
             <div className="relative w-14 h-14 overflow-hidden shrink-0">
               {current.artworkUrl && (
-                <BleedImage fill src={current.artworkUrl} alt={current.title} sizes="56px" scale={6} />
+                <BleedImage fill src={current.artworkUrl} alt={current.title} sizes="56px" />
               )}
             </div>
             <div>
@@ -102,7 +102,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
         <div className="bg-brand-night/40 backdrop-blur p-6 mb-10 border border-brand-cream/10 flex gap-6 items-center">
           <div className="relative w-16 h-16 overflow-hidden shrink-0">
             {current.artworkUrl && (
-              <BleedImage fill src={current.artworkUrl} alt={current.title} sizes="64px" scale={6} />
+              <BleedImage fill src={current.artworkUrl} alt={current.title} sizes="64px" />
             )}
           </div>
           <div className="flex-1 min-w-0">
@@ -142,7 +142,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
           >
             <span className="font-mono text-[10px] tracking-widest w-6 text-center text-brand-cream/40">{String(i + 1).padStart(2, '0')}</span>
             <div className="relative w-10 h-10 overflow-hidden shrink-0">
-              {track.artworkUrl && <BleedImage fill src={track.artworkUrl} alt={track.title} sizes="40px" scale={4} />}
+              {track.artworkUrl && <BleedImage fill src={track.artworkUrl} alt={track.title} sizes="40px" />}
             </div>
             <span className={`flex-1 truncate ${currentIdx === i ? 'font-serif italic text-lg' : 'font-serif text-base'}`}>{track.title}</span>
             <span className="font-mono text-[10px] tracking-widest text-brand-cream/40">{track.duration}</span>

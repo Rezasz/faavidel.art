@@ -5,7 +5,6 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    cursor: none;
   }
   body {
     @apply font-serif text-brand-night bg-brand-parchment antialiased;

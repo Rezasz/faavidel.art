@@ -36,16 +36,16 @@ export interface MusicSettings {
 
 export interface Exhibition {
   order: number
+  year: number
   title: string
   dateLabel: string
-  year: number
   venue: string
   city: string
   country: string
-  organizer: string
-  role: string
-  description: string
-  sourcePage: number
+  format: string
+  curator: string
+  link: string
+  image: string
 }
 
 export interface HomepageContent {

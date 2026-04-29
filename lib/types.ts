@@ -85,6 +85,24 @@ export interface MusicIndex {
   tracks: Track[]
 }
 
+export interface MusicSettings {
+  soundcloudUrl: string
+}
+
+export interface Exhibition {
+  order: number
+  title: string
+  dateLabel: string
+  year: number
+  venue: string
+  city: string
+  country: string
+  organizer: string
+  role: string
+  description: string
+  sourcePage: number
+}
+
 export interface HomepageContent {
   heroTitle: string
   heroSubtitle: string

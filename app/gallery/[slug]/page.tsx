@@ -1,9 +1,10 @@
 import { readJSON } from '@/lib/blob'
 import { Artwork } from '@/lib/types'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import AnimatedSection from '@/components/ui/AnimatedSection'
 import Link from 'next/link'
+import BleedImage from '@/components/atmosphere/BleedImage'
+import RingedOrb from '@/components/atmosphere/RingedOrb'
+import PaintedDivider from '@/components/atmosphere/PaintedDivider'
 
 export const revalidate = 60
 
@@ -17,32 +18,24 @@ export default async function ArtworkPage({
   if (!artwork) notFound()
 
   return (
-    <main className="min-h-screen py-20 px-8 max-w-5xl mx-auto">
-      <AnimatedSection>
-        <Link href="/gallery" className="font-sans text-xs tracking-wider uppercase text-seafoam hover:text-ocean transition-colors mb-8 inline-block">
-          ← Back to Gallery
+    <main className="relative">
+      <section className="relative w-full h-screen">
+        <BleedImage fill src={artwork.imageUrl} alt={artwork.title} priority sizes="100vw" />
+        <RingedOrb size={48} className="absolute top-[14%] right-[10%]" />
+      </section>
+
+      <section className="relative max-w-3xl mx-auto px-6 md:px-12 py-20 text-brand-cream">
+        <Link href="/gallery" className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65 hover:text-brand-amber transition-colors">
+          ← Back to paintings
         </Link>
-      </AnimatedSection>
-      <div className="grid md:grid-cols-2 gap-12 items-start">
-        <AnimatedSection>
-          <div className="relative aspect-[4/3] rounded overflow-hidden bg-off-white">
-            <Image src={artwork.imageUrl} alt={artwork.title} fill className="object-cover" />
-          </div>
-        </AnimatedSection>
-        <AnimatedSection delay={0.15} direction="left">
-          <p className="section-label">{artwork.year}</p>
-          <h1 className="section-title mt-1">{artwork.title}</h1>
-          <div className="section-rule" />
-          <p className="font-serif text-charcoal/80 leading-relaxed mb-6">{artwork.description}</p>
-          <div className="flex gap-2 flex-wrap">
-            {artwork.tags.map(t => (
-              <span key={t} className="font-sans text-xs tracking-wider uppercase text-seafoam border border-seafoam/30 px-2 py-0.5 rounded-full">
-                {t}
-              </span>
-            ))}
-          </div>
-        </AnimatedSection>
-      </div>
+        <p className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65 mt-10">{artwork.year}</p>
+        <h1 className="font-serif italic text-4xl md:text-5xl mt-3">{artwork.title}</h1>
+        <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />
+        <p className="font-serif text-brand-cream/85 text-lg leading-relaxed">{artwork.description}</p>
+        <div className="mt-6 flex gap-4 flex-wrap font-mono text-[10px] uppercase tracking-widest text-brand-cream/55">
+          {artwork.tags.map(t => <span key={t}>#{t}</span>)}
+        </div>
+      </section>
     </main>
   )
 }

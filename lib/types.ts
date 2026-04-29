@@ -15,30 +15,6 @@ export interface GalleryIndex {
   artworks: Pick<Artwork, 'slug' | 'title' | 'imageUrl' | 'tags' | 'order'>[]
 }
 
-export interface PhotoSeries {
-  slug: string
-  title: string
-  description: string
-  coverUrl: string
-  order: number
-  createdAt: string
-}
-
-export interface Photo {
-  id: string
-  url: string
-  caption: string
-  order: number
-}
-
-export interface PhotoSeriesDetail extends PhotoSeries {
-  photos: Photo[]
-}
-
-export interface PhotographyIndex {
-  series: Pick<PhotoSeries, 'slug' | 'title' | 'coverUrl' | 'order'>[]
-}
-
 export interface Post {
   slug: string
   title: string
@@ -52,37 +28,6 @@ export interface Post {
 
 export interface PostIndex {
   posts: Pick<Post, 'slug' | 'title' | 'excerpt' | 'date' | 'status' | 'tags'>[]
-}
-
-export interface VideoItem {
-  id: string
-  title: string
-  description: string
-  embedUrl: string
-  thumbnailUrl: string
-  order: number
-  createdAt: string
-}
-
-export interface VideoIndex {
-  videos: VideoItem[]
-}
-
-export interface Track {
-  id: string
-  title: string
-  fileUrl: string
-  youtubeUrl?: string
-  artworkUrl: string
-  duration: string
-  order: number
-  createdAt: string
-}
-
-export type TrackSourceType = 'file' | 'youtube'
-
-export interface MusicIndex {
-  tracks: Track[]
 }
 
 export interface MusicSettings {

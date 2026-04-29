@@ -20,6 +20,10 @@ export default function Footer() {
         </div>
         <p className="font-mono text-[10px] tracking-widest uppercase opacity-60">© Faezeh Ghavidel</p>
       </div>
+      <div className="mt-6 flex justify-center gap-6 font-mono text-[10px] tracking-widest uppercase opacity-50">
+        <Link href="/disclaimer" className="hover:text-brand-amber transition-colors">Disclaimer</Link>
+        <Link href="/cookies" className="hover:text-brand-amber transition-colors">Cookies</Link>
+      </div>
     </footer>
   )
 }

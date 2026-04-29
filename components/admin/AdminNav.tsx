@@ -10,6 +10,7 @@ const items = [
   { href: '/admin/writing',    label: 'Writing'     },
   { href: '/admin/video',      label: 'Video'       },
   { href: '/admin/music',      label: 'Music'       },
+  { href: '/admin/shop',       label: 'Shop'        },
   { href: '/admin/homepage',   label: 'Homepage'    },
   { href: '/admin/about',      label: 'About'       },
   { href: '/admin/settings',   label: 'Settings'    },

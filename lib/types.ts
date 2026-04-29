@@ -109,3 +109,15 @@ export interface SiteSettings {
   contactEmail: string
   metaImage: string
 }
+
+export interface Marketplace {
+  title: string
+  url: string
+  domain: string
+  description: string
+  order: number
+}
+
+export interface MarketplacesIndex {
+  marketplaces: Marketplace[]
+}

@@ -8,7 +8,7 @@ export const revalidate = 60
 
 const defaultAbout: AboutContent = {
   fullBio: 'A multidisciplinary artist working across painting, photography, music, and writing.',
-  profilePhotoUrl: '',
+  profilePhotoUrl: '/about/portrait.jpg',
   instagram: 'https://www.instagram.com/faa.videl',
   email: 'info@faavidel.art',
   whatsapp: '+971555895441',
@@ -22,13 +22,14 @@ export default async function AboutPage() {
     <main className="relative min-h-screen px-6 md:px-12 py-24">
       <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 items-start">
         <div>
-          {about.profilePhotoUrl ? (
-            <div className="relative aspect-[4/5] max-w-sm overflow-hidden">
-              <BleedImage fill src={about.profilePhotoUrl} alt="Faezeh Ghavidel" sizes="(max-width:768px) 100vw, 400px" />
-            </div>
-          ) : (
-            <div className="aspect-[4/5] max-w-sm bg-gradient-to-br from-brand-iris to-brand-rose" />
-          )}
+          <div className="relative aspect-[4/5] max-w-sm overflow-hidden rounded-sm shadow-2xl">
+            <BleedImage
+              fill
+              src={about.profilePhotoUrl || '/about/portrait.jpg'}
+              alt="Faezeh Ghavidel"
+              sizes="(max-width:768px) 100vw, 400px"
+            />
+          </div>
         </div>
 
         <div className="reading-panel p-8 md:p-10 text-brand-cream self-start">

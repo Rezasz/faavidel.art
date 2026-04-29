@@ -1,49 +1,23 @@
+import { readJSON } from '@/lib/blob'
+import { MarketplacesIndex, Marketplace } from '@/lib/types'
 import Link from 'next/link'
 import PaintedDivider from '@/components/atmosphere/PaintedDivider'
 
-interface Marketplace {
-  title: string
-  url: string
-  domain: string
-  description: string
-}
-
-const marketplaces: Marketplace[] = [
-  {
-    title: 'Wallet Bubbles',
-    url: 'https://walletbubbles.com/faavidel/55df5f8e-14e8-4bcc-a451-057a1da816ff',
-    domain: 'walletbubbles.com',
-    description: 'A curated portfolio space — a visual gallery of Faavidel’s digital works across the wallets she has minted to.',
-  },
-  {
-    title: 'hug.art',
-    url: 'https://hug.art/artists/Faavidel',
-    domain: 'hug.art',
-    description: 'Web3 art platform spotlighting emerging artists. Discover and collect Faavidel’s editions on Ethereum.',
-  },
-  {
-    title: 'Drip.haus',
-    url: 'https://drip.haus/FAAVIDEL',
-    domain: 'drip.haus',
-    description: 'Solana-based platform for free NFT drops — pieces sent directly to collectors’ wallets, no fees.',
-  },
-  {
-    title: 'Manifold',
-    url: 'https://studio.manifold.xyz/auth/login',
-    domain: 'studio.manifold.xyz',
-    description: 'Independent creator-owned smart contracts. Used for self-published collections — sign in to view current releases.',
-  },
-  {
-    title: 'Objkt',
-    url: 'https://objkt.com/users/tz1XWjwZAJti79N6ATrHwNozh9FAUSadn6cf',
-    domain: 'objkt.com',
-    description: 'Tezos NFT marketplace — Faavidel’s 1/1 paintings and editions, available to bid, buy, or trade.',
-  },
-]
-
+export const revalidate = 60
 export const metadata = { title: 'Shop · faavidel' }
 
-export default function ShopPage() {
+const DEFAULTS: Marketplace[] = [
+  { title: 'Wallet Bubbles',    url: 'https://walletbubbles.com/faavidel/55df5f8e-14e8-4bcc-a451-057a1da816ff', domain: 'walletbubbles.com', description: 'A curated portfolio space — a visual gallery of Faavidel’s digital works across the wallets she has minted to.', order: 1 },
+  { title: 'hug.art',           url: 'https://hug.art/artists/Faavidel',                                       domain: 'hug.art',           description: 'Web3 art platform spotlighting emerging artists. Discover and collect Faavidel’s editions on Ethereum.',         order: 2 },
+  { title: 'Drip.haus',         url: 'https://drip.haus/FAAVIDEL',                                             domain: 'drip.haus',         description: 'Solana-based platform for free NFT drops — pieces sent directly to collectors’ wallets, no fees.',                  order: 3 },
+  { title: 'Manifold',          url: 'https://studio.manifold.xyz/auth/login',                                 domain: 'studio.manifold.xyz', description: 'Independent creator-owned smart contracts. Used for self-published collections — sign in to view current releases.', order: 4 },
+  { title: 'Objkt',             url: 'https://objkt.com/users/tz1XWjwZAJti79N6ATrHwNozh9FAUSadn6cf',           domain: 'objkt.com',         description: 'Tezos NFT marketplace — Faavidel’s 1/1 paintings and editions, available to bid, buy, or trade.',                  order: 5 },
+]
+
+export default async function ShopPage() {
+  const data = await readJSON<MarketplacesIndex>('shop/marketplaces.json')
+  const marketplaces = (data?.marketplaces?.length ? data.marketplaces : DEFAULTS).slice().sort((a, b) => a.order - b.order)
+
   return (
     <main className="relative min-h-screen px-6 md:px-12 py-24 max-w-4xl mx-auto">
       <div className="reading-panel p-6 md:p-10 mb-10 inline-block">
@@ -59,7 +33,7 @@ export default function ShopPage() {
       <div className="flex flex-col gap-6">
         {marketplaces.map((m) => (
           <Link
-            key={m.title}
+            key={m.title + m.url}
             href={m.url}
             target="_blank"
             rel="noopener noreferrer"

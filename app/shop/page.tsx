@@ -3,7 +3,6 @@ import { useEffect, useState, Suspense } from 'react'
 import { ProductIndex } from '@/lib/types'
 import ProductGrid from '@/components/shop/ProductGrid'
 import CartDrawer from '@/components/shop/CartDrawer'
-import AnimatedSection from '@/components/ui/AnimatedSection'
 import { ShoppingBag } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { useSearchParams } from 'next/navigation'
@@ -11,9 +10,7 @@ import { useSearchParams } from 'next/navigation'
 function SuccessHandler() {
   const params = useSearchParams()
   useEffect(() => {
-    if (params.get('success')) {
-      alert('Order placed! Thank you.')
-    }
+    if (params.get('success')) alert('Order placed! Thank you.')
   }, [params])
   return null
 }
@@ -28,24 +25,24 @@ function ShopContent() {
   }, [])
 
   return (
-    <main className="min-h-screen py-20 px-8 max-w-6xl mx-auto">
-      <AnimatedSection className="flex justify-between items-start mb-8">
+    <main className="relative min-h-screen px-6 md:px-12 py-24 max-w-6xl mx-auto">
+      <div className="flex justify-between items-start mb-10">
         <div>
-          <p className="section-label">Prints & Products</p>
-          <h1 className="section-title">Shop</h1>
-          <div className="section-rule" />
+          <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Prints &amp; products</p>
+          <h1 className="font-serif italic text-brand-cream text-4xl md:text-5xl mt-2">Shop</h1>
+          <div className="w-12 h-px bg-brand-amber/60 mt-3" />
         </div>
-        <button onClick={() => setCartOpen(true)} className="relative mt-2" data-cursor-hover>
-          <ShoppingBag size={24} className="text-ocean" />
+        <button onClick={() => setCartOpen(true)} className="relative mt-2 text-brand-cream hover:text-brand-amber transition-colors" data-cursor-hover>
+          <ShoppingBag size={24} />
           {count > 0 && (
-            <span className="absolute -top-2 -right-2 bg-burnt text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-sans">
+            <span className="absolute -top-2 -right-2 bg-brand-amber text-brand-night text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-mono">
               {count}
             </span>
           )}
         </button>
-      </AnimatedSection>
+      </div>
       {products.length === 0 ? (
-        <p className="font-serif text-gray-400 text-lg">No products yet.</p>
+        <p className="font-serif italic text-brand-cream/60 text-lg">No products yet.</p>
       ) : (
         <ProductGrid products={products} />
       )}

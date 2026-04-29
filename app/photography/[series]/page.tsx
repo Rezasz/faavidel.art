@@ -1,9 +1,8 @@
 import { readJSON } from '@/lib/blob'
 import { PhotoSeriesDetail } from '@/lib/types'
 import { notFound } from 'next/navigation'
-import PhotoLightbox from '@/components/photography/PhotoLightbox'
-import AnimatedSection from '@/components/ui/AnimatedSection'
 import Link from 'next/link'
+import PhotoLightbox from '@/components/photography/PhotoLightbox'
 
 export const revalidate = 60
 
@@ -19,16 +18,14 @@ export default async function SeriesPage({
   const photos = (data.photos ?? []).sort((a, b) => a.order - b.order)
 
   return (
-    <main className="min-h-screen py-20 px-8 max-w-6xl mx-auto">
-      <AnimatedSection>
-        <Link href="/photography" className="font-sans text-xs tracking-wider uppercase text-seafoam hover:text-ocean mb-8 inline-block">
-          ← All Series
-        </Link>
-        <p className="section-label">Series</p>
-        <h1 className="section-title">{data.title}</h1>
-        <div className="section-rule" />
-        <p className="font-serif text-charcoal/70 max-w-2xl mb-10">{data.description}</p>
-      </AnimatedSection>
+    <main className="relative min-h-screen px-6 md:px-12 py-24 max-w-6xl mx-auto">
+      <Link href="/photography" className="font-mono text-[11px] tracking-widest uppercase text-brand-cream/65 hover:text-brand-amber transition-colors inline-block mb-8">
+        ← All series
+      </Link>
+      <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">Series</p>
+      <h1 className="font-serif italic text-brand-cream text-4xl md:text-5xl mt-2">{data.title}</h1>
+      <div className="w-12 h-px bg-brand-amber/60 mt-3 mb-6" />
+      <p className="font-serif text-brand-cream/85 max-w-2xl mb-10 text-lg leading-relaxed">{data.description}</p>
       <PhotoLightbox photos={photos} />
     </main>
   )

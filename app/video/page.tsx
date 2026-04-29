@@ -2,7 +2,7 @@ import Link from 'next/link'
 import PaintedDivider from '@/components/atmosphere/PaintedDivider'
 
 export const metadata = { title: 'Video · faavidel' }
-export const revalidate = 3600 // refresh the feed once an hour
+export const revalidate = 86400 // refresh the feed once a day
 
 const CHANNEL_ID = 'UCTrofi53ugKi0u0FFhanACw'
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
@@ -16,7 +16,7 @@ interface YTVideo {
 
 async function fetchVideos(): Promise<YTVideo[]> {
   try {
-    const res = await fetch(FEED_URL, { next: { revalidate: 3600 } })
+    const res = await fetch(FEED_URL, { next: { revalidate: 86400 } })
     if (!res.ok) return []
     const xml = await res.text()
     const entries = xml.split('<entry>').slice(1)

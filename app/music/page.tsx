@@ -2,7 +2,7 @@ import { readJSON } from '@/lib/blob'
 import { MusicSettings } from '@/lib/types'
 import PaintedDivider from '@/components/atmosphere/PaintedDivider'
 
-export const revalidate = 60
+export const revalidate = 86400
 export const metadata = { title: 'Music · faavidel' }
 
 const DEFAULT_SOUNDCLOUD_URL = 'https://soundcloud.com/faavidel'

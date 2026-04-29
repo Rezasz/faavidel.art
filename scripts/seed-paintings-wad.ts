@@ -1,5 +1,4 @@
 // scripts/seed-paintings-wad.ts
-import 'dotenv/config'
 import { put, list } from '@vercel/blob'
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -79,6 +78,7 @@ async function main() {
       access: 'public',
       contentType: 'application/json',
       addRandomSuffix: false,
+      allowOverwrite: true,
     })
   }
 
@@ -92,10 +92,11 @@ async function main() {
       order: a.order,
     })),
   }
-  await put('content/gallery.json', JSON.stringify(index, null, 2), {
+  await put('content/gallery/index.json', JSON.stringify(index, null, 2), {
     access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
+    allowOverwrite: true,
   })
 
   console.log(`seeded ${artworks.length} paintings`)

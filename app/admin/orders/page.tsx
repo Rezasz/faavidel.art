@@ -40,24 +40,26 @@ export default function AdminOrdersPage() {
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <div>
-        <h1 className="font-serif text-2xl text-charcoal mb-6">Orders</h1>
-        <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
-          {orders.length === 0 && <p className="p-6 font-sans text-sm text-charcoal/40">No orders yet.</p>}
+        <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/55">Sales</p>
+        <h1 className="font-serif italic text-3xl text-brand-night mt-1 mb-2">Orders</h1>
+        <div className="w-12 h-px bg-brand-amber/60 mb-8" />
+        <div className="bg-white border border-brand-night/10 divide-y divide-brand-night/10">
+          {orders.length === 0 && <p className="p-6 font-serif text-sm text-brand-night/40">No orders yet.</p>}
           {orders.map(o => (
             <button key={o.id} onClick={() => viewOrder(o.id)}
-              className={`w-full flex items-center justify-between px-5 py-3 text-left hover:bg-off-white transition-colors
-                ${selected?.id === o.id ? 'bg-off-white' : ''}`}>
+              className={`w-full flex items-center justify-between px-5 py-3 text-left hover:bg-brand-parchment transition-colors
+                ${selected?.id === o.id ? 'bg-brand-parchment' : ''}`}>
               <div>
-                <p className="font-sans text-sm text-charcoal">{o.customerEmail}</p>
-                <p className="font-sans text-xs text-charcoal/40 mt-0.5">{new Date(o.createdAt).toLocaleDateString()}</p>
+                <p className="font-serif text-sm text-brand-night">{o.customerEmail}</p>
+                <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/40 mt-0.5">{new Date(o.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="flex items-center gap-3">
-                <span className="font-sans text-sm text-burnt">${o.total.toFixed(2)}</span>
-                <span className={`font-sans text-xs uppercase tracking-wider px-2 py-0.5 rounded-full
-                  ${o.status === 'paid' ? 'bg-seafoam/10 text-seafoam' : ''}
-                  ${o.status === 'shipped' ? 'bg-ocean/10 text-ocean' : ''}
-                  ${o.status === 'delivered' ? 'bg-green-50 text-green-600' : ''}
-                  ${o.status === 'pending' ? 'bg-gray-100 text-gray-500' : ''}`}>
+                <span className="font-mono text-sm text-brand-amber">${o.total.toFixed(2)}</span>
+                <span className={`font-mono text-[10px] uppercase tracking-widest px-2 py-0.5
+                  ${o.status === 'paid' ? 'bg-brand-amber text-brand-night' : ''}
+                  ${o.status === 'shipped' ? 'bg-brand-iris text-brand-cream' : ''}
+                  ${o.status === 'delivered' ? 'bg-brand-iris/20 text-brand-iris' : ''}
+                  ${o.status === 'pending' ? 'bg-brand-night/10 text-brand-night/55' : ''}`}>
                   {o.status}
                 </span>
               </div>
@@ -67,41 +69,41 @@ export default function AdminOrdersPage() {
       </div>
 
       {selected && (
-        <div className="bg-white rounded-lg border border-gray-100 p-5">
-          <h2 className="font-serif text-lg text-charcoal mb-1">Order Detail</h2>
-          <p className="font-sans text-xs text-charcoal/40 mb-4">#{selected.id.slice(-8)}</p>
+        <div className="bg-white border border-brand-night/10 p-5">
+          <h2 className="font-serif italic text-xl text-brand-night mb-1">Order Detail</h2>
+          <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/40 mb-4">#{selected.id.slice(-8)}</p>
           <div className="mb-4">
-            <p className="font-sans text-xs text-charcoal/50 uppercase tracking-wider mb-1">Customer</p>
-            <p className="font-sans text-sm">{selected.customerName}</p>
-            <p className="font-sans text-xs text-charcoal/60">{selected.customerEmail}</p>
+            <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1">Customer</p>
+            <p className="font-serif text-sm text-brand-night">{selected.customerName}</p>
+            <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/70">{selected.customerEmail}</p>
           </div>
           <div className="mb-4">
-            <p className="font-sans text-xs text-charcoal/50 uppercase tracking-wider mb-1">Shipping</p>
-            <p className="font-sans text-sm">{selected.shippingAddress.line1}</p>
-            <p className="font-sans text-xs text-charcoal/60">
+            <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1">Shipping</p>
+            <p className="font-serif text-sm text-brand-night">{selected.shippingAddress.line1}</p>
+            <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/70">
               {selected.shippingAddress.city}, {selected.shippingAddress.state} {selected.shippingAddress.postalCode}
             </p>
           </div>
           <div className="mb-4">
-            <p className="font-sans text-xs text-charcoal/50 uppercase tracking-wider mb-2">Items</p>
+            <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-2">Items</p>
             {selected.items.map((item, i) => (
-              <div key={i} className="flex justify-between font-sans text-sm py-1 border-b border-gray-50">
+              <div key={i} className="flex justify-between font-serif text-sm py-1 border-b border-brand-night/10">
                 <span>{item.productTitle} × {item.quantity}</span>
-                <span className="text-burnt">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="text-brand-amber font-mono">${(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
-            <div className="flex justify-between font-sans text-sm font-medium mt-2 pt-1">
+            <div className="flex justify-between font-serif text-sm font-medium mt-2 pt-1">
               <span>Total</span>
-              <span className="text-burnt">${selected.total.toFixed(2)}</span>
+              <span className="text-brand-amber font-mono">${selected.total.toFixed(2)}</span>
             </div>
           </div>
           <div>
-            <p className="font-sans text-xs text-charcoal/50 uppercase tracking-wider mb-2">Update Status</p>
+            <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-2">Update Status</p>
             <div className="flex gap-2 flex-wrap">
               {(['pending', 'paid', 'shipped', 'delivered'] as const).map(s => (
                 <button key={s} onClick={() => updateStatus(selected.id, s)}
-                  className={`font-sans text-xs uppercase tracking-wider px-3 py-1.5 rounded border transition-colors
-                    ${selected.status === s ? 'bg-ocean text-white border-ocean' : 'border-gray-200 text-charcoal/60 hover:border-ocean'}`}>
+                  className={`font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 border transition-colors
+                    ${selected.status === s ? 'bg-brand-iris text-brand-cream border-brand-iris' : 'border-brand-night/20 text-brand-night/70 hover:border-brand-iris'}`}>
                   {s}
                 </button>
               ))}

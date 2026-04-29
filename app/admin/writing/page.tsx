@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react'
 import { PostIndex, Post } from '@/lib/types'
 import RichTextEditor from '@/components/admin/RichTextEditor'
-import { Plus, Trash2 } from 'lucide-react'
+import BrushButton from '@/components/atmosphere/BrushButton'
+import { Trash2 } from 'lucide-react'
 
 type PostForm = Partial<Post> & { tagsInput: string }
 
@@ -89,25 +90,28 @@ export default function AdminWritingPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-serif text-2xl text-charcoal">Writing</h1>
-        <button onClick={() => { setForm(emptyPost()); setEditing(true) }}
-          className="flex items-center gap-2 bg-ocean text-white font-sans text-xs tracking-wider uppercase px-4 py-2 rounded">
-          <Plus size={14} /> New Post
-        </button>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/55">Journal</p>
+          <h1 className="font-serif italic text-3xl text-brand-night mt-1 mb-2">Writing</h1>
+          <div className="w-12 h-px bg-brand-amber/60" />
+        </div>
+        <BrushButton onClick={() => { setForm(emptyPost()); setEditing(true) }}>
+          + New Post
+        </BrushButton>
       </div>
 
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-100 p-6 mb-6">
+        <div className="bg-white border border-brand-night/10 p-6 mb-6">
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <input placeholder="Title" value={form.title ?? ''} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2" />
             <input placeholder="Date (YYYY-MM-DD)" value={form.date ?? ''} onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2" />
             <input placeholder="Excerpt" value={form.excerpt ?? ''} onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2" />
             <select value={form.status ?? 'draft'} onChange={e => setForm(f => ({ ...f, status: e.target.value as 'published' | 'draft' }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam bg-white">
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2">
               <option value="draft">Draft</option>
               <option value="published">Published</option>
             </select>
@@ -115,37 +119,38 @@ export default function AdminWritingPage() {
               placeholder="Tags (comma separated)"
               value={form.tagsInput}
               onChange={e => setForm(f => ({ ...f, tagsInput: e.target.value }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam transition-colors" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2" />
           </div>
           <RichTextEditor value={form.content ?? ''} onChange={content => setForm(f => ({ ...f, content }))} />
-          <div className="flex gap-3 mt-4">
-            <button onClick={save} disabled={saving || !form.title}
-              className="bg-burnt text-white font-sans text-xs tracking-wider uppercase px-5 py-2 rounded disabled:opacity-50">
-              {saving ? 'Saving...' : 'Save'}
-            </button>
+          <div className="flex gap-3 mt-4 items-center">
+            <BrushButton onClick={save} disabled={saving || !form.title}>
+              {saving ? 'Saving…' : 'Save'}
+            </BrushButton>
             <button onClick={() => { setEditing(false); setForm(emptyPost()) }}
-              className="border border-gray-200 text-charcoal/60 font-sans text-xs px-5 py-2 rounded">
+              className="font-mono text-[10px] uppercase tracking-widest text-brand-night/55 hover:text-brand-night transition-colors">
               Cancel
             </button>
           </div>
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
-        {posts.length === 0 && <p className="p-6 font-sans text-sm text-charcoal/40">No posts yet.</p>}
+      <div className="bg-white border border-brand-night/10 divide-y divide-brand-night/10">
+        {posts.length === 0 && <p className="p-6 font-serif text-sm text-brand-night/40">No posts yet.</p>}
         {posts.map(post => (
           <div key={post.slug} className="flex items-center justify-between px-5 py-3">
             <div>
-              <p className="font-sans text-sm text-charcoal">{post.title}</p>
-              <p className="font-sans text-xs text-charcoal/40 mt-0.5">{post.date}</p>
+              <p className="font-serif text-sm text-brand-night">{post.title}</p>
+              <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/40 mt-0.5">{post.date}</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className={`font-sans text-xs uppercase tracking-wider px-2 py-0.5 rounded-full
-                ${post.status === 'published' ? 'bg-seafoam/10 text-seafoam' : 'bg-gray-100 text-gray-400'}`}>
+              <span className={`font-mono text-[10px] uppercase tracking-widest px-2 py-0.5
+                ${post.status === 'published' ? 'bg-brand-amber text-brand-night' : 'bg-brand-night/10 text-brand-night/55'}`}>
                 {post.status}
               </span>
-              <button onClick={() => edit(post.slug)} className="font-sans text-xs text-ocean hover:underline">Edit</button>
-              <button onClick={() => remove(post.slug)} className="text-charcoal/30 hover:text-burnt"><Trash2 size={14} /></button>
+              <button onClick={() => edit(post.slug)} className="font-mono text-[10px] uppercase tracking-widest text-brand-iris hover:text-brand-night transition-colors">Edit</button>
+              <button onClick={() => remove(post.slug)} className="font-mono text-[10px] uppercase tracking-widest text-brand-rose hover:text-brand-night transition-colors">
+                <Trash2 size={14} />
+              </button>
             </div>
           </div>
         ))}

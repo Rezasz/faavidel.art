@@ -43,11 +43,11 @@ export default function FileUpload({ accept = 'image/*', onUploaded, label = 'Up
     <div>
       {preview ? (
         <div className="relative inline-block">
-          <img src={preview} alt="preview" className="max-h-32 rounded border border-gray-200 object-contain" />
+          <img src={preview} alt="preview" className="max-h-32 border border-brand-night/20 object-contain" />
           <button
             type="button"
             onClick={() => { setPreview(''); onUploaded('') }}
-            className="absolute -top-2 -right-2 bg-burnt text-white rounded-full w-5 h-5 flex items-center justify-center"
+            className="absolute -top-2 -right-2 bg-brand-rose text-brand-cream rounded-full w-5 h-5 flex items-center justify-center"
           >
             <X size={10} />
           </button>
@@ -56,11 +56,11 @@ export default function FileUpload({ accept = 'image/*', onUploaded, label = 'Up
         <label
           onDrop={onDrop}
           onDragOver={e => e.preventDefault()}
-          className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-lg p-8 cursor-pointer hover:border-seafoam transition-colors"
+          className="flex flex-col items-center gap-2 border border-dashed border-brand-night/30 bg-brand-parchment p-8 cursor-pointer hover:border-brand-iris transition-colors"
         >
-          <Upload size={20} className="text-gray-400" />
-          <span className="font-sans text-xs text-gray-400 tracking-wider">
-            {uploading ? 'Uploading...' : label}
+          <Upload size={20} className="text-brand-night/40" />
+          <span className="font-mono text-[10px] uppercase tracking-widest text-brand-night/55">
+            {uploading ? 'Uploading…' : label}
           </span>
           <input
             type="file"

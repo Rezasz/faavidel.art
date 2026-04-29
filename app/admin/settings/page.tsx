@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { SiteSettings } from '@/lib/types'
+import BrushButton from '@/components/atmosphere/BrushButton'
 
 const defaults: SiteSettings = { siteTitle: 'faavidel.art', siteDescription: '', contactEmail: '', metaImage: '' }
 
@@ -25,8 +26,10 @@ export default function AdminSettingsPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl text-charcoal mb-6">Settings</h1>
-      <div className="bg-white rounded-lg border border-gray-100 p-6 flex flex-col gap-4 max-w-xl">
+      <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/55">Configuration</p>
+      <h1 className="font-serif italic text-3xl text-brand-night mt-1 mb-2">Settings</h1>
+      <div className="w-12 h-px bg-brand-amber/60 mb-8" />
+      <div className="bg-white border border-brand-night/10 p-6 flex flex-col gap-4 max-w-xl">
         {[
           { key: 'siteTitle', label: 'Site Title', type: 'text' },
           { key: 'siteDescription', label: 'Meta Description', type: 'text' },
@@ -34,16 +37,17 @@ export default function AdminSettingsPage() {
           { key: 'metaImage', label: 'Default Meta Image URL', type: 'text' },
         ].map(({ key, label, type }) => (
           <div key={key}>
-            <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">{label}</label>
+            <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">{label}</label>
             <input value={(form as unknown as Record<string, string>)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
               type={type}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full" />
           </div>
         ))}
-        <button onClick={save} disabled={saving}
-          className="bg-burnt text-white font-sans text-xs tracking-wider uppercase py-2.5 rounded hover:bg-burnt/85 disabled:opacity-50">
-          {saving ? 'Saving...' : saved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+        <div className="mt-2">
+          <BrushButton onClick={save} disabled={saving}>
+            {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save Changes'}
+          </BrushButton>
+        </div>
       </div>
     </div>
   )

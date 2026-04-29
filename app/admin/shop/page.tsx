@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react'
 import { ProductIndex, Product } from '@/lib/types'
 import FileUpload from '@/components/admin/FileUpload'
-import { Plus, Trash2 } from 'lucide-react'
+import BrushButton from '@/components/atmosphere/BrushButton'
+import { Trash2 } from 'lucide-react'
 
 const emptyProduct = (): Partial<Product> => ({
   title: '', description: '', price: 0, images: [], stock: 1, status: 'active',
@@ -79,66 +80,72 @@ export default function AdminShopPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-serif text-2xl text-charcoal">Shop</h1>
-        <button onClick={() => { setForm(emptyProduct()); setEditing(true) }}
-          className="flex items-center gap-2 bg-ocean text-white font-sans text-xs tracking-wider uppercase px-4 py-2 rounded">
-          <Plus size={14} /> Add Product
-        </button>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/55">Store</p>
+          <h1 className="font-serif italic text-3xl text-brand-night mt-1 mb-2">Shop</h1>
+          <div className="w-12 h-px bg-brand-amber/60" />
+        </div>
+        <BrushButton onClick={() => { setForm(emptyProduct()); setEditing(true) }}>
+          + Add Product
+        </BrushButton>
       </div>
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-100 p-6 mb-6">
+        <div className="bg-white border border-brand-night/10 p-6 mb-6">
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <input placeholder="Product title" value={form.title ?? ''} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2" />
             <input placeholder="Price (USD)" type="number" step="0.01" value={form.price ?? ''} onChange={e => setForm(f => ({ ...f, price: Number(e.target.value) }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2" />
             <input placeholder="Stock quantity" type="number" value={form.stock ?? ''} onChange={e => setForm(f => ({ ...f, stock: Number(e.target.value) }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2" />
             <select value={form.status ?? 'active'} onChange={e => setForm(f => ({ ...f, status: e.target.value as 'active' | 'archived' }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam bg-white">
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2">
               <option value="active">Active</option>
               <option value="archived">Archived</option>
             </select>
             <textarea placeholder="Description" value={form.description ?? ''} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam col-span-2 resize-none" />
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 col-span-2 resize-none" />
           </div>
-          <p className="font-sans text-xs text-charcoal/50 uppercase tracking-wider mb-2">Product Images</p>
+          <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-2">Product Images</p>
           <div className="flex gap-3 flex-wrap mb-3">
             {(form.images ?? []).map((img, i) => (
               <div key={img} className="relative">
-                <img src={img} alt="" className="w-20 h-20 object-cover rounded border border-gray-200" />
+                <img src={img} alt="" className="w-20 h-20 object-cover border border-brand-night/20" />
                 <button type="button" onClick={() => removeImage(i)}
-                  className="absolute -top-1 -right-1 bg-burnt text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center">×</button>
+                  className="absolute -top-1 -right-1 bg-brand-rose text-brand-cream rounded-full w-4 h-4 text-[10px] flex items-center justify-center">×</button>
               </div>
             ))}
             <FileUpload onUploaded={addImage} label="Add image" />
           </div>
-          <div className="flex gap-3">
-            <button onClick={save} disabled={saving || !form.title || !form.price}
-              className="bg-burnt text-white font-sans text-xs uppercase tracking-wider px-5 py-2 rounded disabled:opacity-50">
-              {saving ? 'Saving...' : 'Save'}
-            </button>
+          <div className="flex gap-3 items-center">
+            <BrushButton onClick={save} disabled={saving || !form.title || !form.price}>
+              {saving ? 'Saving…' : 'Save'}
+            </BrushButton>
             <button onClick={() => { setEditing(false); setForm(emptyProduct()) }}
-              className="border border-gray-200 text-charcoal/60 font-sans text-xs px-5 py-2 rounded">Cancel</button>
+              className="font-mono text-[10px] uppercase tracking-widest text-brand-night/55 hover:text-brand-night transition-colors">
+              Cancel
+            </button>
           </div>
         </div>
       )}
-      <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
-        {products.length === 0 && <p className="p-6 font-sans text-sm text-charcoal/40">No products yet.</p>}
+      <div className="bg-white border border-brand-night/10 divide-y divide-brand-night/10">
+        {products.length === 0 && <p className="p-6 font-serif text-sm text-brand-night/40">No products yet.</p>}
         {products.map(p => (
           <div key={p.slug} className="flex items-center gap-4 px-5 py-3">
-            {p.images[0] && <img src={p.images[0]} alt={p.title} className="w-12 h-12 object-cover rounded" />}
+            {p.images[0] && <img src={p.images[0]} alt={p.title} className="w-12 h-12 object-cover" />}
             <div className="flex-1">
-              <p className="font-sans text-sm text-charcoal">{p.title}</p>
-              <p className="font-sans text-xs text-burnt mt-0.5">${p.price.toFixed(2)} · {p.stock} in stock</p>
+              <p className="font-serif text-sm text-brand-night">{p.title}</p>
+              <p className="font-mono text-[10px] tracking-widest uppercase text-brand-amber mt-0.5">${p.price.toFixed(2)} · {p.stock} in stock</p>
             </div>
-            <span className={`font-sans text-xs uppercase tracking-wider px-2 py-0.5 rounded-full
-              ${p.status === 'active' ? 'bg-seafoam/10 text-seafoam' : 'bg-gray-100 text-gray-400'}`}>
+            <span className={`font-mono text-[10px] uppercase tracking-widest px-2 py-0.5
+              ${p.status === 'active' ? 'bg-brand-amber text-brand-night' : 'bg-brand-night/10 text-brand-night/55'}`}>
               {p.status}
             </span>
-            <button onClick={() => startEdit(p.slug)} className="font-sans text-xs text-ocean hover:underline">Edit</button>
-            <button onClick={() => remove(p.slug)} className="text-charcoal/30 hover:text-burnt"><Trash2 size={14} /></button>
+            <button onClick={() => startEdit(p.slug)} className="font-mono text-[10px] uppercase tracking-widest text-brand-iris hover:text-brand-night transition-colors">Edit</button>
+            <button onClick={() => remove(p.slug)} className="font-mono text-[10px] uppercase tracking-widest text-brand-rose hover:text-brand-night transition-colors">
+              <Trash2 size={14} />
+            </button>
           </div>
         ))}
       </div>

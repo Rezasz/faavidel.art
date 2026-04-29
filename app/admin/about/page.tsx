@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { AboutContent } from '@/lib/types'
 import FileUpload from '@/components/admin/FileUpload'
+import BrushButton from '@/components/atmosphere/BrushButton'
 
 const defaults: AboutContent = {
   fullBio: '',
@@ -38,44 +39,47 @@ export default function AdminAboutPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl text-charcoal mb-6">About</h1>
-      <div className="bg-white rounded-lg border border-gray-100 p-6 flex flex-col gap-4 max-w-xl">
+      <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/55">Profile</p>
+      <h1 className="font-serif italic text-3xl text-brand-night mt-1 mb-2">About</h1>
+      <div className="w-12 h-px bg-brand-amber/60 mb-8" />
+      <div className="bg-white border border-brand-night/10 p-6 flex flex-col gap-4 max-w-xl">
         <div>
-          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-2">Profile Photo</label>
+          <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-2">Profile Photo</label>
           <FileUpload onUploaded={url => setForm(f => ({ ...f, profilePhotoUrl: url }))} currentUrl={form.profilePhotoUrl} label="Upload profile photo" />
         </div>
         <div>
-          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">Full Bio</label>
+          <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">Full Bio</label>
           <textarea value={form.fullBio} onChange={e => setForm(f => ({ ...f, fullBio: e.target.value }))} rows={8}
-            className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam resize-none" />
+            className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full resize-none" />
         </div>
         <div>
-          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">Instagram URL</label>
+          <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">Instagram URL</label>
           <input value={form.instagram} onChange={e => setForm(f => ({ ...f, instagram: e.target.value }))}
             placeholder="https://www.instagram.com/yourhandle"
-            className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
+            className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full" />
         </div>
         <div>
-          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">WhatsApp Number</label>
+          <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">WhatsApp Number</label>
           <input value={form.whatsapp ?? ''} onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))}
             placeholder="+971555895441"
-            className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
+            className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full" />
         </div>
         <div>
-          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">Linktree URL</label>
+          <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">Linktree URL</label>
           <input value={form.linktree ?? ''} onChange={e => setForm(f => ({ ...f, linktree: e.target.value }))}
             placeholder="https://linktr.ee/yourhandle"
-            className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
+            className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full" />
         </div>
         <div>
-          <label className="font-sans text-xs text-charcoal/50 uppercase tracking-wider block mb-1">Contact Email</label>
+          <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">Contact Email</label>
           <input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} type="email"
-            className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam" />
+            className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full" />
         </div>
-        <button onClick={save} disabled={saving}
-          className="bg-burnt text-white font-sans text-xs tracking-wider uppercase py-2.5 rounded hover:bg-burnt/85 disabled:opacity-50">
-          {saving ? 'Saving...' : saved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+        <div className="mt-2">
+          <BrushButton onClick={save} disabled={saving}>
+            {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save Changes'}
+          </BrushButton>
+        </div>
       </div>
     </div>
   )

@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react'
 import { VideoIndex, VideoItem } from '@/lib/types'
 import FileUpload from '@/components/admin/FileUpload'
-import { Plus, Trash2, Link, Upload } from 'lucide-react'
+import BrushButton from '@/components/atmosphere/BrushButton'
+import { Trash2, Link, Upload } from 'lucide-react'
 
 type SourceType = 'youtube' | 'file'
 
@@ -106,29 +107,32 @@ export default function AdminVideoPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-serif text-2xl text-charcoal">Video</h1>
-        <button onClick={startAdd}
-          className="flex items-center gap-2 bg-ocean text-white font-sans text-xs tracking-wider uppercase px-4 py-2 rounded hover:bg-ocean/85 transition-colors">
-          <Plus size={14} /> Add Video
-        </button>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/55">Moving image</p>
+          <h1 className="font-serif italic text-3xl text-brand-night mt-1 mb-2">Video</h1>
+          <div className="w-12 h-px bg-brand-amber/60" />
+        </div>
+        <BrushButton onClick={startAdd}>
+          + Add Video
+        </BrushButton>
       </div>
 
       {adding && (
-        <div className="bg-white rounded-lg border border-gray-100 p-5 mb-5">
+        <div className="bg-white border border-brand-night/10 p-5 mb-5">
           {/* Source type toggle */}
           <div className="flex gap-2 mb-4">
             <button
               onClick={() => { setSourceType('youtube'); setForm(f => ({ ...f, embedUrl: '' })) }}
-              className={`flex items-center gap-2 px-4 py-2 rounded font-sans text-xs tracking-wider uppercase transition-colors
-                ${sourceType === 'youtube' ? 'bg-burnt text-white' : 'border border-gray-200 text-charcoal/50 hover:border-burnt'}`}
+              className={`flex items-center gap-2 px-4 py-2 font-mono text-[10px] tracking-widest uppercase transition-colors
+                ${sourceType === 'youtube' ? 'bg-brand-amber text-brand-night' : 'border border-brand-night/20 text-brand-night/55 hover:border-brand-amber'}`}
             >
               <Link size={13} /> YouTube / Vimeo Link
             </button>
             <button
               onClick={() => { setSourceType('file'); setRawUrl('') }}
-              className={`flex items-center gap-2 px-4 py-2 rounded font-sans text-xs tracking-wider uppercase transition-colors
-                ${sourceType === 'file' ? 'bg-ocean text-white' : 'border border-gray-200 text-charcoal/50 hover:border-ocean'}`}
+              className={`flex items-center gap-2 px-4 py-2 font-mono text-[10px] tracking-widest uppercase transition-colors
+                ${sourceType === 'file' ? 'bg-brand-iris text-brand-cream' : 'border border-brand-night/20 text-brand-night/55 hover:border-brand-iris'}`}
             >
               <Upload size={13} /> Upload Video File
             </button>
@@ -139,34 +143,34 @@ export default function AdminVideoPage() {
               placeholder="Title"
               value={form.title ?? ''}
               onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam"
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2"
             />
             <textarea
               placeholder="Description"
               value={form.description ?? ''}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
               rows={2}
-              className="border border-gray-200 rounded px-3 py-2 font-sans text-sm focus:outline-none focus:border-seafoam resize-none"
+              className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 resize-none"
             />
 
             {sourceType === 'youtube' ? (
               <div className="md:col-span-2">
-                <p className="font-sans text-xs text-charcoal/50 mb-1 uppercase tracking-wider">YouTube or Vimeo URL</p>
+                <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">YouTube or Vimeo URL</p>
                 <input
                   placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
                   value={rawUrl}
                   onChange={e => setRawUrl(e.target.value)}
-                  className="border border-gray-200 rounded px-3 py-2 font-sans text-sm w-full focus:outline-none focus:border-seafoam"
+                  className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full"
                 />
                 {rawUrl && (
-                  <p className="font-sans text-xs text-charcoal/30 mt-1">
+                  <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/40 mt-1">
                     Embed URL: {toEmbedUrl(rawUrl)}
                   </p>
                 )}
               </div>
             ) : (
               <div className="md:col-span-2">
-                <p className="font-sans text-xs text-charcoal/50 mb-1 uppercase tracking-wider">Video File</p>
+                <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">Video File</p>
                 <FileUpload
                   accept="video/*"
                   onUploaded={url => setForm(f => ({ ...f, embedUrl: url }))}
@@ -177,7 +181,7 @@ export default function AdminVideoPage() {
             )}
 
             <div className="md:col-span-2">
-              <p className="font-sans text-xs text-charcoal/50 mb-1 uppercase tracking-wider">Thumbnail Image</p>
+              <p className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">Thumbnail Image</p>
               <FileUpload
                 onUploaded={url => setForm(f => ({ ...f, thumbnailUrl: url }))}
                 currentUrl={form.thumbnailUrl}
@@ -186,17 +190,13 @@ export default function AdminVideoPage() {
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={save}
-              disabled={saving || !canSave}
-              className="bg-burnt text-white font-sans text-xs uppercase tracking-wider px-5 py-2 rounded disabled:opacity-50 hover:bg-burnt/85 transition-colors"
-            >
-              {saving ? 'Saving...' : 'Save Video'}
-            </button>
+          <div className="flex gap-3 items-center">
+            <BrushButton onClick={save} disabled={saving || !canSave}>
+              {saving ? 'Saving…' : 'Save Video'}
+            </BrushButton>
             <button
               onClick={() => { setAdding(false); setForm(emptyVideo()); setRawUrl('') }}
-              className="border border-gray-200 text-charcoal/60 font-sans text-xs px-5 py-2 rounded hover:border-gray-400 transition-colors"
+              className="font-mono text-[10px] uppercase tracking-widest text-brand-night/55 hover:text-brand-night transition-colors"
             >
               Cancel
             </button>
@@ -204,23 +204,25 @@ export default function AdminVideoPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
-        {videos.length === 0 && <p className="p-6 font-sans text-sm text-charcoal/40">No videos yet. Add your first video above.</p>}
+      <div className="bg-white border border-brand-night/10 divide-y divide-brand-night/10">
+        {videos.length === 0 && <p className="p-6 font-serif text-sm text-brand-night/40">No videos yet. Add your first video above.</p>}
         {videos.map(v => (
           <div key={v.id} className="flex items-center justify-between px-5 py-3">
             <div className="flex items-center gap-3 min-w-0">
               {v.thumbnailUrl
-                ? <img src={v.thumbnailUrl} alt={v.title} className="w-12 h-9 object-cover rounded shrink-0" />
-                : <div className="w-12 h-9 rounded bg-off-white-2 flex items-center justify-center shrink-0"><Link size={14} className="text-charcoal/30" /></div>
+                ? <img src={v.thumbnailUrl} alt={v.title} className="w-12 h-9 object-cover shrink-0" />
+                : <div className="w-12 h-9 bg-brand-night/5 flex items-center justify-center shrink-0"><Link size={14} className="text-brand-night/30" /></div>
               }
               <div className="min-w-0">
-                <p className="font-sans text-sm text-charcoal truncate">{v.title}</p>
-                <p className="font-sans text-xs text-charcoal/40 truncate max-w-xs">{v.embedUrl}</p>
+                <p className="font-serif text-sm text-brand-night truncate">{v.title}</p>
+                <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/40 truncate max-w-xs">{v.embedUrl}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 shrink-0 ml-4">
-              <button onClick={() => startEdit(v)} className="font-sans text-xs text-ocean hover:underline">Edit</button>
-              <button onClick={() => remove(v.id)} className="text-charcoal/30 hover:text-burnt"><Trash2 size={14} /></button>
+              <button onClick={() => startEdit(v)} className="font-mono text-[10px] uppercase tracking-widest text-brand-iris hover:text-brand-night transition-colors">Edit</button>
+              <button onClick={() => remove(v.id)} className="font-mono text-[10px] uppercase tracking-widest text-brand-rose hover:text-brand-night transition-colors">
+                <Trash2 size={14} />
+              </button>
             </div>
           </div>
         ))}

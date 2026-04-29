@@ -50,22 +50,6 @@
 
 @keyframes frame-draw { to { stroke-dashoffset: 0; } }
 
-/* Reduced-motion fallbacks for the atmosphere keyframes below are added in Phase 7 (consolidated sweep). */
-@keyframes atm-cycle {
-  0%   { opacity: 0; transform: scale(1.05); }
-  8%   { opacity: 1; }
-  33%  { opacity: 1; transform: scale(1.18) translate(-2%, -1%); }
-  41%  { opacity: 0; }
-  100% { opacity: 0; transform: scale(1.18) translate(-2%, -1%); }
-}
-@keyframes atm-paint-on {
-  0%   { stroke-dashoffset: 1400; opacity: 0; }
-  8%   { opacity: 0.85; }
-  65%  { stroke-dashoffset: 0;    opacity: 0.85; }
-  90%  { stroke-dashoffset: 0;    opacity: 0; }
-  100% { stroke-dashoffset: 0;    opacity: 0; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -74,7 +58,5 @@
   }
   /* Force final-state values for animations that would otherwise animate from a hidden initial state */
   [style*="painted-underline-draw"] { width: var(--underline-final) !important; }
-  [style*="atm-cycle"]              { opacity: 1 !important; transform: none !important; }
-  [style*="atm-paint-on"]           { stroke-dashoffset: 0 !important; opacity: 0.85 !important; }
   [style*="frame-draw"]             { stroke-dashoffset: 0 !important; }
 }

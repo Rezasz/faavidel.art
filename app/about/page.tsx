@@ -33,19 +33,17 @@ export default async function AboutPage() {
 
   return (
     <main className="relative min-h-screen px-6 md:px-12 py-24">
-      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 items-start">
-        <div>
-          <div className="relative aspect-[4/5] max-w-sm overflow-hidden rounded-sm shadow-2xl">
-            <BleedImage
-              fill
-              src={photoSrc}
-              alt="Faezeh Ghavidel"
-              sizes="(max-width:768px) 100vw, 400px"
-            />
-          </div>
+      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-stretch">
+        <div className="relative w-full min-h-[60vh] md:min-h-0 overflow-hidden rounded-sm shadow-2xl">
+          <BleedImage
+            fill
+            src={photoSrc}
+            alt="Faezeh Ghavidel"
+            sizes="(max-width:768px) 100vw, 50vw"
+          />
         </div>
 
-        <div className="reading-panel p-8 md:p-10 text-brand-cream self-start">
+        <div className="reading-panel p-8 md:p-10 text-brand-cream">
           <p className="font-mono text-[11px] tracking-widest uppercase text-brand-amber/80">The artist</p>
           <h1 className="font-serif italic text-4xl md:text-5xl mt-2">Faezeh Ghavidel</h1>
           <PaintedDivider color="#E8B86F" width="120px" className="!my-6" />

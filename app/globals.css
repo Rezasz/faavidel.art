@@ -65,3 +65,16 @@
   90%  { stroke-dashoffset: 0;    opacity: 0; }
   100% { stroke-dashoffset: 0;    opacity: 0; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  /* Force final-state values for animations that would otherwise animate from a hidden initial state */
+  [style*="painted-underline-draw"] { width: var(--underline-final) !important; }
+  [style*="atm-cycle"]              { opacity: 1 !important; transform: none !important; }
+  [style*="atm-paint-on"]           { stroke-dashoffset: 0 !important; opacity: 0.85 !important; }
+  [style*="frame-draw"]             { stroke-dashoffset: 0 !important; }
+}

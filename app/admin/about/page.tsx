@@ -11,6 +11,7 @@ const defaults: AboutContent = {
   email: '',
   whatsapp: '',
   linktree: '',
+  linkedin: '',
 }
 
 export default function AdminAboutPage() {
@@ -68,6 +69,12 @@ export default function AdminAboutPage() {
           <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">Linktree URL</label>
           <input value={form.linktree ?? ''} onChange={e => setForm(f => ({ ...f, linktree: e.target.value }))}
             placeholder="https://linktr.ee/yourhandle"
+            className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full" />
+        </div>
+        <div>
+          <label className="block font-mono text-[10px] tracking-widest uppercase text-brand-night/65 mb-1.5">LinkedIn URL</label>
+          <input value={form.linkedin ?? ''} onChange={e => setForm(f => ({ ...f, linkedin: e.target.value }))}
+            placeholder="https://www.linkedin.com/in/yourhandle"
             className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-2 w-full" />
         </div>
         <div>

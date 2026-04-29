@@ -13,6 +13,7 @@ const defaultAbout: AboutContent = {
   email: 'info@faavidel.art',
   whatsapp: '+971555895441',
   linktree: 'https://linktr.ee/faavidel',
+  linkedin: 'https://www.linkedin.com/in/faavidel-68843a144/',
 }
 
 const ALLOWED_PHOTO_HOSTS = ['vercel-storage.com', 'public.blob.vercel-storage.com', 'd1l8km4g5s76x5.cloudfront.net']
@@ -60,6 +61,9 @@ export default async function AboutPage() {
             )}
             {about.linktree && (
               <a href={about.linktree} target="_blank" rel="noopener noreferrer" className="text-brand-amber hover:text-brand-cream border-b border-brand-amber/40 pb-0.5 transition-colors">Linktree</a>
+            )}
+            {about.linkedin && (
+              <a href={about.linkedin} target="_blank" rel="noopener noreferrer" className="text-brand-amber hover:text-brand-cream border-b border-brand-amber/40 pb-0.5 transition-colors">LinkedIn</a>
             )}
             {about.email && (
               <a href={`mailto:${about.email}`} className="text-brand-amber hover:text-brand-cream border-b border-brand-amber/40 pb-0.5 transition-colors">Email</a>

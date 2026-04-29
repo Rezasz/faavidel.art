@@ -64,6 +64,7 @@ export interface AboutContent {
   whatsapp?: string
   linktree?: string
   twitter?: string
+  linkedin?: string
 }
 
 export interface SiteSettings {

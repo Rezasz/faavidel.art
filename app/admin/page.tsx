@@ -1,6 +1,7 @@
 'use client'
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
+import BrushButton from '@/components/atmosphere/BrushButton'
 
 export default function AdminLoginPage() {
   const [error, setError] = useState('')
@@ -25,36 +26,30 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ocean flex items-center justify-center px-4" style={{ marginTop: '-64px' }}>
-      <div className="bg-white rounded-xl p-10 w-full max-w-sm shadow-2xl">
-        <h1 className="font-serif text-2xl text-ocean mb-1">faavidel</h1>
-        <p className="font-sans text-xs tracking-wider uppercase text-seafoam mb-8">Admin Panel</p>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            name="username"
-            placeholder="Username"
-            required
-            autoComplete="username"
-            className="border border-gray-200 rounded px-4 py-3 font-sans text-sm focus:outline-none focus:border-seafoam transition-colors"
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            required
-            autoComplete="current-password"
-            className="border border-gray-200 rounded px-4 py-3 font-sans text-sm focus:outline-none focus:border-seafoam transition-colors"
-          />
-          {error && <p className="font-sans text-xs text-burnt">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-ocean text-white font-sans text-xs tracking-wider uppercase py-3 rounded hover:bg-ocean/85 transition-colors disabled:opacity-60"
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-      </div>
+    <div className="bg-brand-parchment p-10 w-full max-w-sm shadow-2xl">
+      <h1 className="font-serif italic text-2xl text-brand-night">faavidel</h1>
+      <p className="font-mono text-[10px] tracking-widest uppercase text-brand-night/55 mt-0.5 mb-8">Admin Panel</p>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          name="username"
+          placeholder="Username"
+          required
+          autoComplete="username"
+          className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-3"
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          autoComplete="current-password"
+          className="bg-transparent border-b border-brand-night/30 font-serif text-brand-night focus:outline-none focus:border-brand-iris transition-colors py-3"
+        />
+        {error && <p className="font-mono text-[10px] tracking-widest uppercase text-brand-rose">{error}</p>}
+        <BrushButton type="submit" disabled={loading}>
+          {loading ? 'Signing in…' : 'Sign In'}
+        </BrushButton>
+      </form>
     </div>
   )
 }

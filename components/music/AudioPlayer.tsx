@@ -3,7 +3,8 @@ import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import { Track } from '@/lib/types'
-import Image from 'next/image'
+import BleedImage from '@/components/atmosphere/BleedImage'
+import { useMusic } from '@/context/MusicContext'
 
 export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -11,17 +12,20 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
   const [progress, setProgress] = useState(0)
   const audioRef = useRef<HTMLAudioElement>(null)
   const current = tracks[currentIdx]
+  const { pauseExternal, resumeExternal } = useMusic()
+
+  useEffect(() => {
+    pauseExternal()
+    return () => { resumeExternal() }
+  }, [pauseExternal, resumeExternal])
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
     const update = () => setProgress((audio.currentTime / audio.duration) * 100 || 0)
     const ended = () => {
-      if (currentIdx < tracks.length - 1) {
-        setCurrentIdx(i => i + 1)
-      } else {
-        setPlaying(false)
-      }
+      if (currentIdx < tracks.length - 1) setCurrentIdx(i => i + 1)
+      else setPlaying(false)
     }
     audio.addEventListener('timeupdate', update)
     audio.addEventListener('ended', ended)
@@ -56,8 +60,6 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
   if (!current) return null
 
   const isYoutube = !!current.youtubeUrl
-
-  // Convert YouTube watch URL to embed if needed
   const youtubeEmbed = isYoutube ? (() => {
     try {
       const url = new URL(current.youtubeUrl!)
@@ -74,19 +76,20 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
   return (
     <div>
       {isYoutube ? (
-        <div className="bg-ocean rounded-xl p-6 mb-8">
+        <div className="bg-brand-night/40 backdrop-blur p-6 mb-10 border border-brand-cream/10">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 rounded-lg overflow-hidden bg-charcoal shrink-0 relative">
+            <div className="relative w-14 h-14 overflow-hidden shrink-0">
               {current.artworkUrl && (
-                <Image src={current.artworkUrl} alt={current.title} fill className="object-cover" />
+                <BleedImage fill src={current.artworkUrl} alt={current.title} sizes="56px" scale={6} />
               )}
             </div>
             <div>
-              <h3 className="text-white font-serif text-lg">{current.title}</h3>
-              {current.duration && <p className="text-white/40 font-sans text-xs mt-0.5">{current.duration}</p>}
+              <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/55">Now playing</p>
+              <h3 className="font-serif italic text-brand-cream text-xl mt-0.5">{current.title}</h3>
+              {current.duration && <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/55 mt-1">{current.duration}</p>}
             </div>
           </div>
-          <div className="rounded-lg overflow-hidden aspect-video">
+          <div className="overflow-hidden aspect-video">
             <iframe
               src={youtubeEmbed}
               className="w-full h-full"
@@ -96,26 +99,27 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
           </div>
         </div>
       ) : (
-        <div className="bg-ocean rounded-xl p-6 mb-8 flex gap-6 items-center">
-          <div className="w-16 h-16 rounded-lg overflow-hidden bg-charcoal shrink-0 relative">
+        <div className="bg-brand-night/40 backdrop-blur p-6 mb-10 border border-brand-cream/10 flex gap-6 items-center">
+          <div className="relative w-16 h-16 overflow-hidden shrink-0">
             {current.artworkUrl && (
-              <Image src={current.artworkUrl} alt={current.title} fill className="object-cover" />
+              <BleedImage fill src={current.artworkUrl} alt={current.title} sizes="64px" scale={6} />
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-white font-serif text-lg truncate">{current.title}</h3>
-            <div className="h-1 bg-white/20 rounded-full mt-3 cursor-pointer" onClick={seek}>
-              <motion.div className="h-full bg-burnt rounded-full" style={{ width: `${progress}%` }} />
+            <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/55">Now playing</p>
+            <h3 className="font-serif italic text-brand-cream text-xl truncate">{current.title}</h3>
+            <div className="h-px bg-brand-cream/20 mt-3 cursor-pointer" onClick={seek}>
+              <motion.div className="h-full bg-brand-amber" style={{ width: `${progress}%` }} />
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => setCurrentIdx(i => Math.max(0, i - 1))} className="text-white/60 hover:text-white transition-colors">
+            <button onClick={() => setCurrentIdx(i => Math.max(0, i - 1))} className="text-brand-cream/60 hover:text-brand-amber transition-colors">
               <SkipBack size={20} />
             </button>
-            <button onClick={toggle} className="w-10 h-10 bg-burnt rounded-full flex items-center justify-center text-white hover:bg-burnt/80 transition-colors">
+            <button onClick={toggle} className="w-10 h-10 bg-brand-amber text-brand-night flex items-center justify-center hover:bg-brand-coral transition-colors">
               {playing ? <Pause size={18} /> : <Play size={18} />}
             </button>
-            <button onClick={() => setCurrentIdx(i => Math.min(tracks.length - 1, i + 1))} className="text-white/60 hover:text-white transition-colors">
+            <button onClick={() => setCurrentIdx(i => Math.min(tracks.length - 1, i + 1))} className="text-brand-cream/60 hover:text-brand-amber transition-colors">
               <SkipForward size={20} />
             </button>
           </div>
@@ -124,7 +128,7 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
 
       <audio ref={audioRef} />
 
-      <div className="flex flex-col divide-y divide-gray-100">
+      <div className="flex flex-col">
         {tracks.map((track, i) => (
           <motion.button
             key={track.id}
@@ -133,17 +137,15 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
             viewport={{ once: true }}
             transition={{ delay: i * 0.05 }}
             onClick={() => { setCurrentIdx(i); setPlaying(true) }}
-            className={`flex items-center gap-4 py-4 text-left hover:bg-off-white rounded px-2 transition-colors
-              ${currentIdx === i ? 'text-ocean' : 'text-charcoal'}`}
+            className={`flex items-center gap-4 py-4 text-left px-2 transition-colors border-b border-brand-cream/10
+              ${currentIdx === i ? 'text-brand-amber' : 'text-brand-cream/85 hover:text-brand-cream'}`}
           >
-            <span className="font-sans text-xs w-6 text-center text-charcoal/40">{i + 1}</span>
-            <div className="w-10 h-10 rounded bg-off-white-2 relative overflow-hidden shrink-0">
-              {track.artworkUrl && (
-                <Image src={track.artworkUrl} alt={track.title} fill className="object-cover" />
-              )}
+            <span className="font-mono text-[10px] tracking-widest w-6 text-center text-brand-cream/40">{String(i + 1).padStart(2, '0')}</span>
+            <div className="relative w-10 h-10 overflow-hidden shrink-0">
+              {track.artworkUrl && <BleedImage fill src={track.artworkUrl} alt={track.title} sizes="40px" scale={4} />}
             </div>
-            <span className="font-serif flex-1 truncate">{track.title}</span>
-            <span className="font-sans text-xs text-charcoal/40">{track.duration}</span>
+            <span className={`flex-1 truncate ${currentIdx === i ? 'font-serif italic text-lg' : 'font-serif text-base'}`}>{track.title}</span>
+            <span className="font-mono text-[10px] tracking-widest text-brand-cream/40">{track.duration}</span>
           </motion.button>
         ))}
       </div>

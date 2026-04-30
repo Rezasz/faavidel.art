@@ -28,7 +28,8 @@ function safePhotoUrl(raw: string | undefined): string {
 }
 
 export default async function AboutPage() {
-  const about = (await readJSON<AboutContent>('about.json')) ?? defaultAbout
+  const stored = await readJSON<AboutContent>('about.json')
+  const about: AboutContent = { ...defaultAbout, ...(stored ?? {}) }
   const photoSrc = safePhotoUrl(about.profilePhotoUrl)
 
   return (

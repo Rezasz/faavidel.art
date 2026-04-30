@@ -19,9 +19,15 @@ export default function AdminAboutPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/content/about').then(r => r.ok ? r.json() : null).then(d => d && setForm(d))
-  }, [])
+  const load = async () => {
+    const r = await fetch('/api/content/about')
+    if (r.ok) {
+      const d = await r.json()
+      if (d) setForm({ ...defaults, ...d })
+    }
+  }
+
+  useEffect(() => { load() }, [])
 
   const save = async () => {
     setSaving(true)
@@ -29,6 +35,7 @@ export default function AdminAboutPage() {
       await fetch('/api/content/about', {
         method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form),
       })
+      await load()
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
     } catch (err) {

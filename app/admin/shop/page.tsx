@@ -18,13 +18,14 @@ export default function AdminShopPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/content/shop/marketplaces')
-      .then(r => r.ok ? r.json() : null)
-      .then((d: MarketplacesIndex | null) => {
-        if (d?.marketplaces?.length) setItems(d.marketplaces.slice().sort((a, b) => a.order - b.order))
-      })
-  }, [])
+  const load = async () => {
+    const r = await fetch('/api/content/shop/marketplaces')
+    const d: MarketplacesIndex | null = r.ok ? await r.json() : null
+    if (d) setItems((d.marketplaces ?? []).slice().sort((a, b) => a.order - b.order))
+    else setItems(DEFAULTS)
+  }
+
+  useEffect(() => { load() }, [])
 
   const update = (i: number, patch: Partial<Marketplace>) => {
     setItems(prev => prev.map((m, idx) => idx === i ? { ...m, ...patch } : m))
@@ -53,6 +54,7 @@ export default function AdminShopPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ marketplaces: items }),
       })
+      await load()
       setSaved(true); setTimeout(() => setSaved(false), 2000)
     } finally { setSaving(false) }
   }

@@ -36,14 +36,14 @@ export default function AdminExhibitionsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/content/exhibitions/index')
-      .then(r => (r.ok ? r.json() : null))
-      .then((d: ExhibitionsIndex | null) => {
-        const list = d?.exhibitions?.length ? d.exhibitions : (seed as Exhibition[])
-        setItems(sortForDisplay(list))
-      })
-  }, [])
+  const load = async () => {
+    const r = await fetch('/api/content/exhibitions/index')
+    const d: ExhibitionsIndex | null = r.ok ? await r.json() : null
+    const list = d ? (d.exhibitions ?? []) : (seed as Exhibition[])
+    setItems(sortForDisplay(list))
+  }
+
+  useEffect(() => { load() }, [])
 
   const persist = async (next: Exhibition[]) => {
     setSaving(true)
@@ -53,7 +53,7 @@ export default function AdminExhibitionsPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ exhibitions: next } satisfies ExhibitionsIndex),
       })
-      setItems(sortForDisplay(next))
+      await load()
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
     } finally {

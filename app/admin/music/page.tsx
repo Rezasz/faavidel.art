@@ -10,11 +10,15 @@ export default function AdminMusicPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/content/music/soundcloud').then(r => r.ok ? r.json() : null).then((d: MusicSettings | null) => {
-      if (d?.soundcloudUrl) setUrl(d.soundcloudUrl)
-    })
-  }, [])
+  const load = async () => {
+    const r = await fetch('/api/content/music/soundcloud')
+    if (r.ok) {
+      const d: MusicSettings | null = await r.json()
+      setUrl(d?.soundcloudUrl ?? '')
+    }
+  }
+
+  useEffect(() => { load() }, [])
 
   const save = async () => {
     setSaving(true)
@@ -24,6 +28,7 @@ export default function AdminMusicPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ soundcloudUrl: url.trim() } satisfies MusicSettings),
       })
+      await load()
       setSaved(true); setTimeout(() => setSaved(false), 2000)
     } finally { setSaving(false) }
   }

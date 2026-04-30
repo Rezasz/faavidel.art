@@ -16,18 +16,28 @@ export default function AdminHomepagePage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/content/homepage').then(r => r.ok ? r.json() : null).then(d => d && setForm(d))
-  }, [])
+  const load = async () => {
+    const r = await fetch('/api/content/homepage')
+    if (r.ok) {
+      const d = await r.json()
+      if (d) setForm({ ...defaults, ...d })
+    }
+  }
+
+  useEffect(() => { load() }, [])
 
   const save = async () => {
     setSaving(true)
-    await fetch('/api/content/homepage', {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form),
-    })
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    try {
+      await fetch('/api/content/homepage', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form),
+      })
+      await load()
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (

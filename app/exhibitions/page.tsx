@@ -1,11 +1,17 @@
-import data from '@/scripts/exhibitions-data.json'
-import { Exhibition } from '@/lib/types'
+import seed from '@/scripts/exhibitions-data.json'
+import { Exhibition, ExhibitionsIndex } from '@/lib/types'
+import { readJSON } from '@/lib/blob'
 import PaintedDivider from '@/components/atmosphere/PaintedDivider'
 
 export const metadata = { title: 'Exhibitions · faavidel' }
+export const revalidate = 60
 
-export default function ExhibitionsPage() {
-  const exhibitions = data as Exhibition[]
+const photoSrc = (img: string) =>
+  !img ? '' : img.startsWith('http') ? img : `/exhibitions/${img}`
+
+export default async function ExhibitionsPage() {
+  const stored = await readJSON<ExhibitionsIndex>('exhibitions/index.json')
+  const exhibitions = stored?.exhibitions?.length ? stored.exhibitions : (seed as Exhibition[])
   const years = Array.from(new Set(exhibitions.map(e => e.year))).sort((a, b) => b - a)
 
   return (
@@ -25,16 +31,18 @@ export default function ExhibitionsPage() {
             <h2 className="font-serif italic text-brand-cream/80 text-3xl md:text-4xl mb-6">{year}</h2>
             <div className="flex flex-col gap-8">
               {items.map((e) => (
-                <article key={e.order} className="reading-panel p-5 md:p-7">
+                <article key={`${e.year}-${e.order}`} className="reading-panel p-5 md:p-7">
                   <div className="grid md:grid-cols-[2fr_3fr] gap-5 md:gap-7">
                     <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-brand-night">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`/exhibitions/${e.image}`}
-                        alt={`${e.title} — ${e.venue}`}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                      />
+                      {e.image && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={photoSrc(e.image)}
+                          alt={`${e.title} — ${e.venue}`}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col">
                       <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/60">

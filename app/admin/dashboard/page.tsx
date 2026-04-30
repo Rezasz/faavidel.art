@@ -1,17 +1,22 @@
 import { readJSON } from '@/lib/blob'
-import { GalleryIndex, PostIndex } from '@/lib/types'
+import { GalleryIndex, PostIndex, ExhibitionsIndex, Exhibition } from '@/lib/types'
+import seed from '@/scripts/exhibitions-data.json'
 import Link from 'next/link'
 
 export const revalidate = 0
 
 export default async function DashboardPage() {
-  const [gallery, posts] = await Promise.all([
+  const [gallery, posts, exhibitions] = await Promise.all([
     readJSON<GalleryIndex>('gallery/index.json'),
     readJSON<PostIndex>('writing/index.json'),
+    readJSON<ExhibitionsIndex>('exhibitions/index.json'),
   ])
+
+  const exhibitionCount = exhibitions?.exhibitions?.length ?? (seed as Exhibition[]).length
 
   const stats = [
     { label: 'Artworks', value: gallery?.artworks.length ?? 0, href: '/admin/gallery' },
+    { label: 'Exhibitions', value: exhibitionCount, href: '/admin/exhibitions' },
     { label: 'Posts', value: posts?.posts.filter(p => p.status === 'published').length ?? 0, href: '/admin/writing' },
   ]
 

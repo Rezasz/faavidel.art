@@ -29,6 +29,7 @@ export async function writeJSON<T>(path: string, data: T): Promise<void> {
     access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
+    allowOverwrite: true,
   })
 }
 
@@ -54,6 +55,7 @@ export async function uploadMedia(
     access: 'public',
     contentType,
     addRandomSuffix: false,
+    allowOverwrite: true,
   })
   return result.url
 }

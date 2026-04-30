@@ -48,6 +48,10 @@ export interface Exhibition {
   image: string
 }
 
+export interface ExhibitionsIndex {
+  exhibitions: Exhibition[]
+}
+
 export interface HomepageContent {
   heroTitle: string
   heroSubtitle: string

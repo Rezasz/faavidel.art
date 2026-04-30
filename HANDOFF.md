@@ -1,7 +1,7 @@
 # faavidel.art — Handoff Document
 
-**Date:** 2026-04-29
-**Status:** Live and stable. All commerce removed; site is portfolio-only.
+**Date:** 2026-05-01
+**Status:** Live and stable. All commerce removed; site is portfolio-only. Gallery seeded with 62 paintings. Admin write/refresh path fixed end-to-end.
 
 ---
 
@@ -14,9 +14,9 @@ A multidisciplinary portfolio with a painterly visual identity (Cormorant Garamo
 | Route | Source of content |
 |---|---|
 | `/` | Hero rotates four artist-supplied prose poems; featured paintings + latest writing + bio teaser pulled from blob |
-| `/gallery` | Blob: `content/gallery/index.json` (per-painting JSON at `content/gallery/<slug>.json`) |
+| `/gallery` | Blob: `content/gallery/index.json` (per-painting JSON at `content/gallery/<slug>.json`) — currently 62 entries (18 WAD 2026 + 44 from the All-in-one Faavi import) |
 | `/gallery/[slug]` | Blob: `content/gallery/<slug>.json` — windowed image, prev/next, neutral black background |
-| `/exhibitions` | Static JSON: `scripts/exhibitions-data.json` (16 exhibitions across 2025 / 2024 / 2023, year-grouped) |
+| `/exhibitions` | Blob: `content/exhibitions/index.json` (managed via `/admin/exhibitions`); falls back to `scripts/exhibitions-data.json` (16 exhibitions across 2025 / 2024 / 2023, year-grouped) when blob is empty |
 | `/writing`, `/writing/[slug]` | Blob: `content/writing/index.json` + per-post JSON |
 | `/video` | Live: YouTube Atom feed for channel `UCTrofi53ugKi0u0FFhanACw` (`@Faavidel`) — refreshed daily |
 | `/music` | Blob: `content/music/soundcloud.json` (just a URL); embeds SoundCloud iframe — refreshed daily |
@@ -26,7 +26,9 @@ A multidisciplinary portfolio with a painterly visual identity (Cormorant Garamo
 
 ### Admin (`/admin`, login `admin` / `ADMIN_PASS`)
 
-Dashboard · Gallery · Writing · Music · Shop · Homepage · About · Settings.
+Dashboard · Gallery · Exhibitions · Writing · Music · Shop · Homepage · About · Settings.
+
+Every admin page **refetches from the server after each save/delete**, so the admin list always shows what's actually persisted. The content API also calls `revalidatePath` on the affected public routes — so the live site reflects the change immediately, no 60s wait.
 
 (Photography, Video, Orders, and Product CRUD have been removed. Music admin only stores a single SoundCloud URL; Shop admin manages the 5 marketplace cards.)
 
@@ -78,7 +80,8 @@ RESEND_API_KEY        (from resend.com — required only if transactional email 
 ### Refresh cadence
 
 - `/video` and `/music` use `revalidate = 86400` — refreshed once a day. Force a refresh by redeploying (`git commit --allow-empty -m "rebuild" && git push`) or hitting the route's revalidate endpoint.
-- All admin-edited content (gallery, writing, about, homepage, settings, shop, music URL) uses `revalidate = 60` — picks up changes within a minute of saving.
+- All admin-edited content (gallery, exhibitions, writing, about, homepage, settings, shop, music URL) uses `revalidate = 60` as a baseline, **but** the content API calls `revalidatePath` on save/delete so changes show up on the public site instantly. The 60s window only matters if blob is mutated outside the app (e.g. directly from the Vercel dashboard).
+- Admin GETs return `Cache-Control: no-store` so the admin list is never stale.
 
 ### Adding paintings
 
@@ -87,13 +90,17 @@ Use `/admin/gallery`. Uploads go to Vercel Blob. The home page picks up new artw
 ### Resetting / re-seeding the gallery
 
 ```bash
+# 18 paintings from World Art Dubai 2026
 BLOB_READ_WRITE_TOKEN=<token> npx tsx scripts/seed-paintings-wad.ts
+
+# 44 paintings from a local directory of .jpg files (defaults to ~/Downloads/All in one Faavi)
+BLOB_READ_WRITE_TOKEN=<token> npx tsx scripts/seed-paintings-allinone.ts [optional/source/dir]
 ```
-Idempotent — already-uploaded images are skipped.
+Both are idempotent — already-uploaded images are skipped and the index is merged (not replaced). The All-in-one script uses each filename as the painting title and parses the trailing 4‑digit year.
 
 ### Updating exhibitions
 
-Edit `scripts/exhibitions-data.json` and replace the relevant images under `public/exhibitions/<filename>.jpg` (filenames must match the `image` field on each entry). Push to `main`. There is currently no admin UI for exhibitions — they're build-time content.
+Use `/admin/exhibitions` — full CRUD, image upload, drag-free reorder within a year. The page persists to `content/exhibitions/index.json` in blob. The legacy static JSON at `scripts/exhibitions-data.json` is kept as a fallback for first-load when blob is empty; images stored under `public/exhibitions/<filename>.jpg` still work alongside blob-uploaded ones.
 
 ### Updating the SoundCloud track
 
@@ -122,11 +129,12 @@ content/                                 (Vercel Blob keys; lib/blob.ts auto-pre
   writing/<slug>.json                    Post
   shop/marketplaces.json                 MarketplacesIndex (5 records)
   music/soundcloud.json                  MusicSettings ({ soundcloudUrl })
+  exhibitions/index.json                 ExhibitionsIndex (managed via /admin/exhibitions)
 ```
 
 The repo also ships static data:
-- `scripts/exhibitions-data.json` — the 16 exhibitions (compiled into the page at build time)
-- `scripts/artworks-wad2026.json` — source list used by the gallery seeder
+- `scripts/exhibitions-data.json` — fallback for `/exhibitions` when the blob is empty
+- `scripts/artworks-wad2026.json` — source list used by the WAD gallery seeder
 
 ---
 

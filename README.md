@@ -55,9 +55,9 @@ No Stripe / cart variables — on-site commerce was removed; the shop links to e
 | Route | Description |
 |---|---|
 | `/` | Home — wordmark, rotating prose hero, featured paintings, latest writing, about teaser |
-| `/gallery` | Painting grid (currently 18 works seeded from World Art Dubai 2026), tag filter, gentle amber light sweep |
+| `/gallery` | Painting grid (62 works seeded — 18 from World Art Dubai 2026 + 44 from the All-in-one Faavi import), tag filter, gentle amber light sweep |
 | `/gallery/[slug]` | Single painting — windowed view on neutral black background, prev/next navigation |
-| `/exhibitions` | Year-grouped list (2025 / 2024 / 2023) of 16 exhibitions sourced from `scripts/exhibitions-data.json` |
+| `/exhibitions` | Year-grouped list (2025 / 2024 / 2023) — reads from blob (`content/exhibitions/index.json`), falls back to `scripts/exhibitions-data.json` (16 exhibitions) when blob is empty |
 | `/writing` | Essays — Cormorant title list with painted dividers |
 | `/writing/[slug]` | Single post on a parchment reading surface |
 | `/video` | Latest videos from `youtube.com/@Faavidel`, fetched server-side from the channel's Atom feed (refreshed daily) |
@@ -83,8 +83,9 @@ Access at `/admin` (username `admin`, password from `ADMIN_PASS`). The admin she
 
 | Route | Manages |
 |---|---|
-| `/admin/dashboard` | Counts of artworks + posts |
+| `/admin/dashboard` | Counts of artworks + exhibitions + posts |
 | `/admin/gallery` | Paintings — upload, title, description, tags, year |
+| `/admin/exhibitions` | Year-grouped exhibitions — title, dates, venue, location, format, curator, link, image (upload or filename), reorder, delete, add |
 | `/admin/writing` | Markdown posts with publish/draft toggle |
 | `/admin/music` | The single SoundCloud URL |
 | `/admin/shop` | The five marketplace cards (title, URL, domain, description, reorder, delete, add) |
@@ -92,19 +93,27 @@ Access at `/admin` (username `admin`, password from `ADMIN_PASS`). The admin she
 | `/admin/about` | Bio, profile photo, Instagram, WhatsApp, Linktree, LinkedIn, email |
 | `/admin/settings` | Site title, SEO description, contact email |
 
+Every admin page refetches from the server after each save/delete and the content API calls `revalidatePath` on the affected public routes — so changes show up in the admin list **and** on the live site immediately, without a manual refresh.
+
 Photography, Video, and Shop product CRUD were removed. The shop now links to external Web3 marketplaces; videos pull from YouTube; music embeds SoundCloud.
 
 ---
 
 ## Content seeding
 
-Initialize the gallery with the 18 World Art Dubai 2026 paintings (idempotent — re‑running skips already‑uploaded images):
+Two seed scripts (both idempotent — re‑running skips already‑uploaded images and merges with the existing index):
 
 ```bash
+# 18 paintings from World Art Dubai 2026 (fetched from URLs in scripts/artworks-wad2026.json)
 BLOB_READ_WRITE_TOKEN=<token> npx tsx scripts/seed-paintings-wad.ts
+
+# 44 paintings from a local directory of .jpg files (defaults to ~/Downloads/All in one Faavi)
+BLOB_READ_WRITE_TOKEN=<token> npx tsx scripts/seed-paintings-allinone.ts [optional/source/dir]
 ```
 
-Exhibition data lives in `scripts/exhibitions-data.json` and ships with the repo (no seeding needed).
+The All‑in‑one Faavi script uses each filename as the painting title and parses the trailing 4‑digit year (e.g. `441 years later 2024.jpg` → title `441 years later 2024`, year `2024`).
+
+Exhibition data lives in `scripts/exhibitions-data.json` and ships with the repo. Exhibitions saved through `/admin/exhibitions` go to `content/exhibitions/index.json` in blob and override the seed.
 
 ---
 
@@ -133,7 +142,7 @@ components/
 context/                  # MusicContext (ambient audio state)
 lib/                      # blob.ts, types.ts, auth.ts, slug.ts, resend.ts
 public/                   # audio/ambient.m4a, about/portrait.jpg, exhibitions/*.jpg
-scripts/                  # seed-paintings-wad.ts, exhibitions-data.json, copy-exhibition-images.mjs, test-music-context.ts
+scripts/                  # seed-paintings-wad.ts, seed-paintings-allinone.ts, exhibitions-data.json, patch-about-linkedin.ts, copy-exhibition-images.mjs, test-music-context.ts
 docs/superpowers/         # design specs + implementation plans
 ```
 

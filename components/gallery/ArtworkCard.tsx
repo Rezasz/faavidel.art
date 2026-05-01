@@ -28,11 +28,11 @@ export default function ArtworkCard({ slug, title, imageUrl, index, total }: Pro
         <div className="relative aspect-[4/5] overflow-hidden">
           <BleedImage fill src={imageUrl} alt={title} sizes="(max-width:768px) 50vw, 33vw" />
         </div>
-        <div className="mt-3">
-          <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/55">
+        <div className="mt-3 inline-block bg-brand-night/85 backdrop-blur-md rounded-sm px-3 py-2 max-w-full">
+          <p className="font-mono text-[10px] tracking-widest uppercase text-brand-cream/70">
             № {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
           </p>
-          <h3 className="font-serif italic text-xl text-brand-cream mt-1">{title}</h3>
+          <h3 className="font-serif italic text-xl text-brand-cream mt-1 leading-tight">{title}</h3>
           <div className="opacity-0 group-hover:opacity-100 transition-opacity">
             <PaintedUnderline width={120} delay={0} />
           </div>
